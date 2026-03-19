@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Commander – Chez Giacomo | Pâtes &amp; Farines de Sicile</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23fdf8f3'/><text x='16' y='23' text-anchor='middle' font-family='Georgia,serif' font-size='16' font-weight='bold' fill='%23c2541a'>CG</text></svg>">
+  <meta name="description" content="Commandez en ligne les pâtes artisanales et farines de blé ancien de Sicile. Retrait à La Neuveville, livraison région NE/Bienne." />
+  <!-- Open Graph — mettre à jour og:url et og:image avec votre URL finale -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="Commander – Chez Giacomo | Pâtes &amp; Farines de Sicile" />
+  <meta property="og:description" content="Commandez en ligne les pâtes artisanales et farines de blé ancien de Sicile. Retrait à La Neuveville, livraison région NE/Bienne." />
+  <meta property="og:image"       content="pasta artigianale Mulino Angelica.jpg" />
+  <meta property="og:url"         content="https://giacomogenna.github.io/commande.chezgiacomo.ch/" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #fdf8f3;
+      color: #2c1a0e;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: #fff;
+      border-bottom: 1px solid #e8ddd4;
+      padding: 20px 24px;
+      text-align: center;
+      position: relative;
+    }
+    .back-btn {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      font-family: sans-serif;
+      font-size: 12px;
+      color: #8b4513;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      opacity: 0.8;
+    }
+    .back-btn:hover { opacity: 1; }
+    header .brand {
+      font-size: 13px;
+      font-family: sans-serif;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #8b4513;
+      margin-bottom: 4px;
+    }
+    header h1 {
+      font-size: 22px;
+      font-weight: 400;
+      color: #2c1a0e;
+    }
+    header p {
+      font-size: 13px;
+      color: #888;
+      margin-top: 4px;
+      font-family: sans-serif;
+    }
+
+    /* ── Layout ── */
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 24px 16px 180px;
+    }
+
+    /* ── Intro ── */
+    .intro-box {
+      background: #fff;
+      border: 1px solid #e8ddd4;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-family: sans-serif;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.65;
+      margin-bottom: 8px;
+    }
+    .intro-box strong { color: #2c1a0e; }
+
+    /* ── Section titles ── */
+    .section-title {
+      font-family: sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #c2541a;
+      margin: 32px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e8ddd4;
+    }
+
+    /* ── Discount badge ── */
+    .discount-badge {
+      display: inline-block;
+      background: #fff3e0;
+      color: #c2541a;
+      font-size: 11px;
+      font-family: sans-serif;
+      padding: 3px 8px;
+      border-radius: 20px;
+      margin-left: 8px;
+      font-weight: 600;
+    }
+
+    /* ── Product card ── */
+    .product-card {
+      background: #fff;
+      border: 1px solid #e8ddd4;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .product-card.active {
+      border-color: #c2541a;
+      box-shadow: 0 0 0 1px #c2541a22;
+    }
+
+    /* ── Product image ── */
+    .product-img {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: #f0e8df;
+    }
+    .product-img-placeholder {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #f0e8df;
+      flex-shrink: 0;
+    }
+
+    .product-info { flex: 1; min-width: 0; }
+    .product-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #2c1a0e;
+      margin-bottom: 2px;
+    }
+    .product-sub {
+      font-size: 12px;
+      color: #999;
+      font-family: sans-serif;
+    }
+    .product-price {
+      font-family: sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #c2541a;
+      white-space: nowrap;
+    }
+    .product-price .strikethrough {
+      text-decoration: line-through;
+      color: #bbb;
+      font-weight: 400;
+      font-size: 13px;
+      margin-right: 4px;
+    }
+
+    /* ── Qty stepper ── */
+    .qty-stepper {
+      display: flex;
+      align-items: center;
+      background: #f5ede5;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .qty-stepper button {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: transparent;
+      font-size: 20px;
+      color: #c2541a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+      font-family: sans-serif;
+    }
+    .qty-stepper button:hover { background: #e8d5c4; }
+    .qty-stepper button:active { background: #d4b99a; }
+    .qty-stepper .qty-val {
+      width: 32px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: sans-serif;
+      color: #2c1a0e;
+    }
+
+    /* ── Pack card ── */
+    .pack-card {
+      background: #fff8f3;
+      border: 2px solid #c2541a;
+      border-radius: 14px;
+      padding: 18px 18px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .pack-card .product-info { flex: 1; }
+    .pack-badge {
+      display: inline-block;
+      background: #c2541a;
+      color: #fff;
+      font-size: 10px;
+      font-family: sans-serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+    .pack-desc {
+      font-size: 13px;
+      color: #666;
+      font-family: sans-serif;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* ── Formulaire contact ── */
+    .form-section-title {
+      font-family: sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #c2541a;
+      margin: 32px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e8ddd4;
+    }
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .field-group { }
+    .field-group label {
+      display: block;
+      font-size: 11px;
+      font-family: sans-serif;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 6px;
+    }
+    .field-group input,
+    .field-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #e8ddd4;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: 'Georgia', serif;
+      background: #fff;
+      color: #2c1a0e;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+    .field-group input:focus,
+    .field-group textarea:focus {
+      border-color: #c2541a;
+    }
+    .field-group input::placeholder,
+    .field-group textarea::placeholder { color: #ddd; }
+    .field-full { margin-bottom: 12px; }
+    .field-group textarea { min-height: 70px; }
+
+    /* ── Footer sticky ── */
+    .sticky-footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: #fff;
+      border-top: 1px solid #e8ddd4;
+      padding: 12px 20px 18px;
+      z-index: 100;
+    }
+    .sticky-footer-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .total-block { flex: 1; min-width: 0; }
+    .total-label {
+      font-size: 10px;
+      font-family: sans-serif;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .total-amount {
+      font-size: 22px;
+      font-weight: 700;
+      color: #2c1a0e;
+      font-family: sans-serif;
+      line-height: 1.1;
+    }
+    .total-items {
+      font-size: 11px;
+      color: #aaa;
+      font-family: sans-serif;
+    }
+    .footer-btns {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .btn-action {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+      white-space: nowrap;
+      color: #fff;
+    }
+    .btn-action:active { transform: scale(0.97); }
+    .btn-action svg { flex-shrink: 0; }
+    .btn-action.disabled {
+      background: #ccc !important;
+      cursor: default;
+      pointer-events: none;
+    }
+    .btn-whatsapp { background: #25D366; }
+    .btn-whatsapp:hover { background: #1ebe5d; }
+    .btn-email { background: #c2541a; }
+    .btn-email:hover { background: #a84515; }
+
+    /* ── Checkbox conditions ── */
+    .checkbox-block {
+      margin-top: 20px;
+      background: #fff;
+      border: 1px solid #e8ddd4;
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .checkbox-block label {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      font-family: sans-serif;
+      font-size: 13.5px;
+      color: #444;
+      line-height: 1.55;
+    }
+    .checkbox-block input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      accent-color: #c2541a;
+      margin-top: 2px;
+      cursor: pointer;
+    }
+
+    /* ── Pack mix checkboxes ── */
+    .pack-mix {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .pack-mix label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: sans-serif;
+      font-size: 13px;
+      color: #555;
+      cursor: pointer;
+      background: #fff;
+      border: 1px solid #e8ddd4;
+      border-radius: 20px;
+      padding: 4px 12px 4px 8px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .pack-mix label:has(input:checked) {
+      border-color: #c2541a;
+      background: #fff3ec;
+      color: #c2541a;
+      font-weight: 600;
+    }
+    .pack-mix input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      accent-color: #c2541a;
+      cursor: pointer;
+    }
+    .pack-mix-hint {
+      font-size: 12px;
+      color: #aaa;
+      font-family: sans-serif;
+      margin-top: 6px;
+    }
+
+    /* ── Delivery choice ── */
+    .delivery-choice {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 2px;
+    }
+    .delivery-choice label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-family: sans-serif;
+      font-size: 13.5px;
+      color: #555;
+      cursor: pointer;
+      background: #fff;
+      border: 1px solid #e8ddd4;
+      border-radius: 20px;
+      padding: 7px 14px 7px 10px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .delivery-choice label:has(input:checked) {
+      border-color: #c2541a;
+      background: #fff3ec;
+      color: #c2541a;
+      font-weight: 600;
+    }
+    .delivery-choice input[type="radio"] {
+      width: 15px;
+      height: 15px;
+      accent-color: #c2541a;
+      cursor: pointer;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 520px) {
+      .field-row { grid-template-columns: 1fr; }
+      .btn-action { padding: 11px 13px; font-size: 13px; gap: 6px; }
+      .btn-action span { display: none; }
+      .total-amount { font-size: 19px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="https://www.chezgiacomo.ch" class="back-btn">← Site</a>
+  <div class="brand">Chez Giacomo</div>
+  <h1>Ta commande</h1>
+  <p>Pâtes &amp; farines artisanales de Sicile</p>
+</header>
+
+<main>
+
+  <!-- INTRO -->
+  <div class="intro-box">
+    <strong>Comment ça marche ?</strong> Choisis tes produits et les quantités, remplis tes coordonnées en bas, puis envoie ta commande en un clic.
+    Le bouton <strong>WhatsApp</strong> ouvre une conversation avec le message déjà rédigé — idéal pour échanger directement.
+    Le bouton <strong>Email</strong> ouvre ton application mail avec ta commande prête à être envoyée.
+  </div>
+
+  <!-- PACK DÉCOUVERTE -->
+  <div class="section-title">Pack ideal pour commencer</div>
+
+  <div class="pack-card" id="card-pack">
+    <img class="product-img" src="pasta artigianale Mulino Angelica.jpg" alt="Pack Découverte" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="pack-badge">Coup de coeur</div>
+      <div class="product-name">Pack Découverte — 4 kg</div>
+      <div class="pack-desc">4 paquets de pâtes variés + 2 Mix Farine — choisis tes 2 préférés :</div>
+      <div class="pack-mix">
+        <label><input type="checkbox" id="pack-mix-pizza" onchange="limitPackMix()"> Mix Pizza</label>
+        <label><input type="checkbox" id="pack-mix-pain" onchange="limitPackMix()"> Mix Pain</label>
+        <label><input type="checkbox" id="pack-mix-pasta" onchange="limitPackMix()"> Mix Pasta</label>
+      </div>
+      <div class="pack-mix-hint">Sélectionne 2 parmi les 3</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0">
+      <div class="product-price">37.00 CHF</div>
+      <div class="qty-stepper">
+        <button onclick="changeQty('pack', -1)">−</button>
+        <div class="qty-val" id="qty-pack">0</div>
+        <button onclick="changeQty('pack', +1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PÂTES -->
+  <div class="section-title">
+    Pâtes artisanales — 500 g
+    <span class="discount-badge">6.00 CHF dès 3 paquets</span>
+  </div>
+
+  <div id="pates-list"></div>
+
+  <!-- FARINES 1KG -->
+  <div class="section-title">
+    Farines — 1 kg
+    <span class="discount-badge">7.50 CHF dès 3 paquets</span>
+  </div>
+
+  <div id="farines-1kg-list"></div>
+
+  <!-- FARINES 5KG -->
+  <div class="section-title">Farines — 5 kg</div>
+
+  <div id="farines-5kg-list"></div>
+
+  <!-- FORMULAIRE CONTACT -->
+  <div class="form-section-title">Tes coordonnées</div>
+
+  <div class="field-row">
+    <div class="field-group">
+      <label>Prénom *</label>
+      <input type="text" id="input-prenom" placeholder="ex. Jaime" oninput="updateTotal()" />
+    </div>
+    <div class="field-group">
+      <label>Nom *</label>
+      <input type="text" id="input-nom" placeholder="ex. Lapasta" oninput="updateTotal()" />
+    </div>
+  </div>
+  <div class="field-full">
+    <div class="field-group">
+      <label>Adresse *</label>
+      <input type="text" id="input-adresse" placeholder="ex. Rue de Lausanne 12" oninput="updateTotal()" />
+    </div>
+  </div>
+  <div class="field-full">
+    <div class="field-group">
+      <label>Ville *</label>
+      <input type="text" id="input-ville" placeholder="ex. La Neuveville" oninput="updateTotal()" />
+    </div>
+  </div>
+  <div class="field-full">
+    <div class="field-group">
+      <label>Mode de réception *</label>
+      <div class="delivery-choice">
+        <label>
+          <input type="radio" name="delivery" id="delivery-retrait" value="retrait" checked onchange="updateTotal()" />
+          Retrait — La Neuveville (gratuit)
+        </label>
+        <label>
+          <input type="radio" name="delivery" id="delivery-livraison" value="livraison" onchange="updateTotal()" />
+          Livraison — région NE/Bienne (dès 70 CHF)
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="field-full">
+    <div class="field-group">
+      <label>Email <span style="font-size:10px;color:#aaa;font-weight:400;letter-spacing:0">(requis pour envoyer par email)</span></label>
+      <input type="email" id="input-email" placeholder="ex. giacomo@gmail.com" oninput="updateTotal()" />
+    </div>
+  </div>
+  <div class="field-full">
+    <div class="field-group">
+      <label>Téléphone <span style="font-size:10px;color:#aaa;font-weight:400;letter-spacing:0">(optionnel)</span></label>
+      <input type="tel" id="input-tel" placeholder="ex. +41 79 000 00 00" oninput="updateTotal()" />
+    </div>
+  </div>
+  <div class="field-full">
+    <div class="field-group">
+      <label>Remarque (optionnel)</label>
+      <textarea id="input-note" placeholder="ex. Je viens de la part de..."></textarea>
+    </div>
+  </div>
+
+  <!-- CONDITIONS -->
+  <div class="checkbox-block">
+    <label>
+      <input type="checkbox" id="checkbox-conditions" onchange="updateTotal()" />
+      J'ai compris que le retrait se fait à la Neuveville à la date indiquée sur le site, que la livraison est possible dans la région NE/Bienne pour une commande supérieure à 70.-, et qu'il n'y a pas (pour le moment) d'envoi par la Poste.
+    </label>
+  </div>
+  <div class="checkbox-block" style="margin-top:10px">
+    <label>
+      <input type="checkbox" id="checkbox-newsletter" />
+      J'accepte de recevoir des communications par WhatsApp ou email sur les nouveautés de chezgiacomo.ch.
+    </label>
+  </div>
+
+</main>
+
+<!-- FOOTER STICKY -->
+<div class="sticky-footer">
+  <div class="sticky-footer-inner">
+    <div class="total-block">
+      <div class="total-label">Total TTC</div>
+      <div class="total-amount" id="total-display">0.00 CHF</div>
+      <div class="total-items" id="items-display">Aucun article sélectionné</div>
+      <div class="total-items" style="margin-top:1px;color:#bbb">TVA 2.6% incluse</div>
+    </div>
+    <div class="footer-btns">
+      <a id="btn-wa" href="#" class="btn-action btn-whatsapp disabled" onclick="handleWhatsApp(event)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        <span>WhatsApp</span>
+      </a>
+      <a id="btn-email" href="#" class="btn-action btn-email disabled" onclick="handleEmail(event)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+        </svg>
+        <span>Email</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const WHATSAPP_NUMBER = '41799468810';
+  const EMAIL_TO = 'jack.genna@gmail.com';
+
+  // ── Catalogue ──────────────────────────────────────────────────
+  const pates = [
+    { id: 'busiata',       name: 'Busiata',       sub: 'Torsadée typique de Sicile',              img: 'Busiata.jpg' },
+    { id: 'spaghetti',     name: 'Spaghetti',      sub: 'Le classique intemporel',                 img: 'Spaghetti.jpg' },
+    { id: 'linguine',      name: 'Linguine',       sub: 'Parfaite avec fruits de mer ou pesto',    img: 'Linguine.jpg' },
+    { id: 'mezze-maniche', name: 'Mezze Maniche',  sub: 'Tubes striés pour sauces crémeuses',      img: 'Mezze maniche.jpg' },
+    { id: 'penne-rigate',  name: 'Penne Rigate',   sub: 'Rayures qui retiennent bien les sauces',  img: 'Penne Rigate.jpg' },
+    { id: 'pappardelle',   name: 'Pappardelle',    sub: 'Sublimes avec ragù et champignons',       img: 'Pappardelle.jpg' },
+  ];
+
+  const farines1kg = [
+    { id: 'mix-pizza-1kg', name: 'Mix Pizza',  sub: 'Farine spéciale pizza croustillante — 1 kg', img: 'Mix farina - Pizza.jpg' },
+    { id: 'mix-pain-1kg',  name: 'Mix Pain',   sub: 'Idéale pour la boulangerie artisanale — 1 kg', img: 'Mix farina - Pane.jpg' },
+    { id: 'mix-pasta-1kg', name: 'Mix Pasta',  sub: 'Pour tes pâtes fraîches maison — 1 kg',      img: 'Mix farina - Pasta.jpg' },
+  ];
+
+  const farines5kg = [
+    { id: 'mix-pizza-5kg', name: 'Mix Pizza',  sub: 'Farine spéciale pizza croustillante — 5 kg', img: 'Mix farina - Pizza.jpg' },
+    { id: 'mix-pain-5kg',  name: 'Mix Pain',   sub: 'Idéale pour la boulangerie artisanale — 5 kg', img: 'Mix farina - Pane.jpg' },
+    { id: 'mix-pasta-5kg', name: 'Mix Pasta',  sub: 'Pour tes pâtes fraîches maison — 5 kg',      img: 'Mix farina - Pasta.jpg' },
+  ];
+
+  // ── Quantités ──────────────────────────────────────────────────
+  const quantities = { pack: 0 };
+  [...pates, ...farines1kg, ...farines5kg].forEach(p => quantities[p.id] = 0);
+
+  // ── Render produits ────────────────────────────────────────────
+  function renderProducts(listId, products, priceNormal) {
+    const container = document.getElementById(listId);
+    container.innerHTML = '';
+    products.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'product-card';
+      div.id = 'card-' + p.id;
+      div.innerHTML = `
+        <img class="product-img" src="${p.img}" alt="${p.name}" onerror="this.outerHTML='<div class=product-img-placeholder></div>'">
+        <div class="product-info">
+          <div class="product-name">${p.name}</div>
+          <div class="product-sub">${p.sub}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0">
+          <div class="product-price" id="price-${p.id}">${priceNormal.toFixed(2)} CHF</div>
+          <div class="qty-stepper">
+            <button onclick="changeQty('${p.id}', -1)">−</button>
+            <div class="qty-val" id="qty-${p.id}">0</div>
+            <button onclick="changeQty('${p.id}', +1)">+</button>
+          </div>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  renderProducts('pates-list',       pates,      7.50);
+  renderProducts('farines-1kg-list', farines1kg, 9.00);
+  renderProducts('farines-5kg-list', farines5kg, 35.00);
+
+  // ── Limiter sélection mix à 2 ─────────────────────────────────
+  const packMixIds = ['pack-mix-pizza', 'pack-mix-pain', 'pack-mix-pasta'];
+  function limitPackMix() {
+    const checked = packMixIds.filter(id => document.getElementById(id).checked);
+    packMixIds.forEach(id => {
+      const el = document.getElementById(id);
+      el.disabled = checked.length >= 2 && !el.checked;
+      el.closest('label').style.opacity = el.disabled ? '0.4' : '1';
+      el.closest('label').style.cursor = el.disabled ? 'not-allowed' : 'pointer';
+    });
+  }
+
+  // ── Modifier quantité ──────────────────────────────────────────
+  function changeQty(id, delta) {
+    quantities[id] = Math.max(0, quantities[id] + delta);
+    document.getElementById('qty-' + id).textContent = quantities[id];
+    const card = document.getElementById('card-' + id);
+    if (card) card.classList.toggle('active', quantities[id] > 0);
+    updateTotal();
+  }
+
+  // ── Calcul total ───────────────────────────────────────────────
+  function calcTotal() {
+    let total = 0;
+    let items = 0;
+    const lines = [];
+
+    if (quantities.pack > 0) {
+      const sub = quantities.pack * 37.00;
+      total += sub; items += quantities.pack;
+      const mixes = [
+        document.getElementById('pack-mix-pizza').checked  ? 'Mix Pizza' : null,
+        document.getElementById('pack-mix-pain').checked   ? 'Mix Pain'  : null,
+        document.getElementById('pack-mix-pasta').checked  ? 'Mix Pasta' : null,
+      ].filter(Boolean);
+      const mixText = mixes.length > 0 ? ` — farines : ${mixes.join(' + ')}` : ' — farines : à préciser';
+      lines.push(`Pack Découverte x${quantities.pack}${mixText} = ${sub.toFixed(2)} CHF`);
+    }
+
+    const totalPates = pates.reduce((s, p) => s + quantities[p.id], 0);
+    const prixPate = totalPates >= 3 ? 6.00 : 7.50;
+    pates.forEach(p => {
+      const q = quantities[p.id];
+      if (q > 0) {
+        const sub = q * prixPate;
+        total += sub; items += q;
+        lines.push(`${p.name} x${q} = ${sub.toFixed(2)} CHF`);
+      }
+    });
+    pates.forEach(p => {
+      const el = document.getElementById('price-' + p.id);
+      if (!el) return;
+      el.innerHTML = totalPates >= 3
+        ? `<span class="strikethrough">7.50</span>6.00 CHF`
+        : '7.50 CHF';
+    });
+
+    const totalF1 = farines1kg.reduce((s, p) => s + quantities[p.id], 0);
+    const prixF1 = totalF1 >= 3 ? 7.50 : 9.00;
+    farines1kg.forEach(p => {
+      const q = quantities[p.id];
+      if (q > 0) {
+        const sub = q * prixF1;
+        total += sub; items += q;
+        lines.push(`${p.name} 1 kg x${q} = ${sub.toFixed(2)} CHF`);
+      }
+    });
+    farines1kg.forEach(p => {
+      const el = document.getElementById('price-' + p.id);
+      if (!el) return;
+      el.innerHTML = totalF1 >= 3
+        ? `<span class="strikethrough">9.00</span>7.50 CHF`
+        : '9.00 CHF';
+    });
+
+    farines5kg.forEach(p => {
+      const q = quantities[p.id];
+      if (q > 0) {
+        const sub = q * 35.00;
+        total += sub; items += q;
+        lines.push(`${p.name} 5 kg x${q} = ${sub.toFixed(2)} CHF`);
+      }
+    });
+
+    return { total, items, lines };
+  }
+
+  // ── Contact fields ─────────────────────────────────────────────
+  function getContact() {
+    const delivery = document.querySelector('input[name="delivery"]:checked');
+    return {
+      prenom:   document.getElementById('input-prenom').value.trim(),
+      nom:      document.getElementById('input-nom').value.trim(),
+      adresse:  document.getElementById('input-adresse').value.trim(),
+      ville:    document.getElementById('input-ville').value.trim(),
+      delivery: delivery ? delivery.value : 'retrait',
+      email:    document.getElementById('input-email').value.trim(),
+      tel:      document.getElementById('input-tel').value.trim(),
+      note:     document.getElementById('input-note').value.trim(),
+    };
+  }
+
+  // ── Mise à jour UI ─────────────────────────────────────────────
+  function updateTotal() {
+    const { total, items } = calcTotal();
+    document.getElementById('total-display').textContent = total.toFixed(2) + ' CHF';
+    document.getElementById('items-display').textContent =
+      items === 0 ? 'Aucun article sélectionné' :
+      items === 1 ? '1 article' : `${items} articles`;
+
+    const checked = document.getElementById('checkbox-conditions').checked;
+    const prenom  = document.getElementById('input-prenom').value.trim();
+    const nom     = document.getElementById('input-nom').value.trim();
+    const adresse = document.getElementById('input-adresse').value.trim();
+    const ville   = document.getElementById('input-ville').value.trim();
+    const email   = document.getElementById('input-email').value.trim();
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const emailEl = document.getElementById('input-email');
+    emailEl.style.borderColor = email && !emailOk ? '#e05555' : '';
+    const base       = items > 0 && checked && prenom && nom && adresse && ville;
+    document.getElementById('btn-wa').classList.toggle('disabled', !base);
+    document.getElementById('btn-email').classList.toggle('disabled', !(base && emailOk));
+  }
+
+  // ── Construire le corps du message ─────────────────────────────
+  function buildMessage(lines, total, contact, sep = '\n') {
+    const { prenom, nom, adresse, ville, delivery, email, tel, note } = contact;
+    const deliveryLabel = delivery === 'livraison'
+      ? 'Livraison — région NE/Bienne'
+      : 'Retrait — La Neuveville';
+    let msg = `Bonjour Giacomo,${sep}${sep}`;
+    msg += `J'aimerais passer une commande de pâtes et farines de blé ancien de Sicile !${sep}${sep}`;
+    msg += `Voici ma commande :${sep}${sep}`;
+    msg += lines.map(l => `- ${l}`).join(sep);
+    msg += `${sep}${sep}Total TTC : ${total.toFixed(2)} CHF (TVA 2.6% incluse)${sep}${sep}`;
+    msg += `Et mes coordonnées :${sep}`;
+    if (prenom || nom) msg += `${[prenom, nom].filter(Boolean).join(' ')}${sep}`;
+    if (adresse) msg += `${adresse}${sep}`;
+    if (ville)   msg += `${ville}${sep}`;
+    if (email)   msg += `${email}${sep}`;
+    if (tel)     msg += `${tel}${sep}`;
+    msg += `${sep}Mode de réception : ${deliveryLabel}${sep}`;
+    if (note)    msg += `${sep}Remarque : ${note}${sep}`;
+    msg += `${sep}Merci et belle journée !`;
+    return msg;
+  }
+
+  // ── WhatsApp ───────────────────────────────────────────────────
+  function handleWhatsApp(e) {
+    e.preventDefault();
+    const { total, items, lines } = calcTotal();
+    if (items === 0) return;
+    const msg = buildMessage(lines, total, getContact());
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+  }
+
+  // ── Email ──────────────────────────────────────────────────────
+  function handleEmail(e) {
+    e.preventDefault();
+    const { total, items, lines } = calcTotal();
+    if (items === 0) return;
+    const contact = getContact();
+    const name = [contact.prenom, contact.nom].filter(Boolean).join(' ');
+    const subject = `Commande Chez Giacomo${name ? ' - ' + name : ''}`;
+    const body = buildMessage(lines, total, contact);
+    window.location.href = `mailto:${EMAIL_TO}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }
+
+  updateTotal();
+</script>
+
+</body>
+</html>
