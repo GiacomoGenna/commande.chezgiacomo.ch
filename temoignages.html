@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mon avis – Chez Giacomo | Pâtes &amp; Farines de Sicile</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23fdf8f3'/><text x='16' y='23' text-anchor='middle' font-family='Georgia,serif' font-size='16' font-weight='bold' fill='%23c2541a'>CG</text></svg>">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #fdf8f3;
+      color: #2c1a0e;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #e8ddd4;
+      padding: 20px 24px;
+      text-align: center;
+    }
+    .brand {
+      font-size: 13px;
+      font-family: sans-serif;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #8b4513;
+      margin-bottom: 4px;
+    }
+    header h1 { font-size: 22px; font-weight: 400; color: #2c1a0e; }
+    header p   { font-size: 13px; color: #888; margin-top: 4px; font-family: sans-serif; }
+
+    main {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 36px 16px 60px;
+    }
+
+    .intro-text {
+      font-family: sans-serif;
+      font-size: 15px;
+      color: #666;
+      line-height: 1.7;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+    .intro-text strong { color: #2c1a0e; }
+
+    /* ── Carte formulaire ── */
+    .form-card {
+      background: #fff;
+      border: 1px solid #e8ddd4;
+      border-radius: 16px;
+      padding: 28px 24px;
+    }
+
+    /* ── Notation fusilli ── */
+    .rating-section { text-align: center; margin-bottom: 28px; }
+    .rating-label {
+      display: block;
+      font-family: sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 20px;
+    }
+    .stars {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .star {
+      font-size: 44px;
+      line-height: 1;
+      cursor: pointer;
+      color: #e0d4c8;
+      transition: color 0.12s, transform 0.1s;
+      user-select: none;
+    }
+    .star.lit   { color: #c2541a; }
+    .star:active { transform: scale(0.86); }
+    .rating-hint {
+      font-family: sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: #2c1a0e;
+      height: 20px;
+      transition: opacity 0.15s;
+    }
+
+    /* ── Champs ── */
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .field-group { margin-bottom: 16px; }
+    .field-group label {
+      display: block;
+      font-size: 11px;
+      font-family: sans-serif;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 6px;
+    }
+    .field-group input,
+    .field-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #e8ddd4;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: 'Georgia', serif;
+      background: #fff;
+      color: #2c1a0e;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+    .field-group input:focus,
+    .field-group textarea:focus { border-color: #c2541a; }
+    .field-group input::placeholder,
+    .field-group textarea::placeholder { color: #ddd; }
+    .field-group textarea { min-height: 110px; }
+
+    /* ── Bouton ── */
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: #c2541a;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: sans-serif;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 4px;
+    }
+    .btn-submit:hover:not(:disabled) { background: #a84515; }
+    .btn-submit:active:not(:disabled) { transform: scale(0.98); }
+    .btn-submit:disabled { background: #ccc; cursor: default; }
+
+    /* ── Succès ── */
+    .success-box { text-align: center; padding: 48px 16px; }
+    .success-icon  { font-size: 52px; margin-bottom: 20px; }
+    .success-title { font-size: 22px; font-weight: 400; color: #2c1a0e; margin-bottom: 12px; }
+    .success-text  { font-family: sans-serif; font-size: 14px; color: #888; line-height: 1.65; }
+
+    /* ── Pied de page ── */
+    .page-footer { margin-top: 36px; text-align: center; font-family: sans-serif; font-size: 13px; }
+    .page-footer a { color: #bbb; text-decoration: none; }
+    .page-footer a:hover { color: #c2541a; text-decoration: underline; }
+
+    @media (max-width: 480px) {
+      .field-row { grid-template-columns: 1fr; }
+      .star { font-size: 38px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Chez Giacomo</div>
+  <h1>Mon avis</h1>
+  <p>Pâtes &amp; Farines artisanales de Sicile</p>
+</header>
+
+<main>
+  <p class="intro-text">
+    <strong>Tu as goûté les pâtes et/ou farines de blé ancien de Sicile — merci !</strong><br>
+    Partage ton expérience en quelques mots.<br>
+    Ça aidera d'autres personnes à découvrir ces magnifiques produits.
+  </p>
+
+  <div class="form-card" id="form-card">
+
+    <!-- NOTATION FUSILLI -->
+    <div class="rating-section">
+      <span class="rating-label">Ma note</span>
+      <div class="stars" id="stars">
+        <span class="star" data-val="1">★</span>
+        <span class="star" data-val="2">★</span>
+        <span class="star" data-val="3">★</span>
+        <span class="star" data-val="4">★</span>
+        <span class="star" data-val="5">★</span>
+      </div>
+      <div class="rating-hint" id="rating-hint">Clique pour noter</div>
+    </div>
+
+    <!-- CHAMPS -->
+    <div class="field-row">
+      <div class="field-group">
+        <label>Prénom *</label>
+        <input type="text" id="input-prenom" placeholder="Marie" autocomplete="given-name" oninput="updateBtn()" />
+      </div>
+      <div class="field-group">
+        <label>Ville <span style="font-size:10px;color:#bbb;font-weight:400;letter-spacing:0;text-transform:none">(optionnel)</span></label>
+        <input type="text" id="input-ville" placeholder="Bienne" autocomplete="address-level2" />
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Mon commentaire *</label>
+      <textarea id="input-commentaire" placeholder="Les pâtes sont incroyables, la busiata est ma préférée… Je les ai reçues en livraison, emballage parfait !" oninput="updateBtn()"></textarea>
+    </div>
+
+    <button class="btn-submit" id="btn-submit" onclick="handleSubmit()">
+      Envoyer mon avis
+    </button>
+
+  </div>
+
+  <footer class="page-footer">
+    <a href="https://www.chezgiacomo.ch">← Retour sur chezgiacomo.ch</a>
+  </footer>
+</main>
+
+<script>
+  const MAKE_REVIEWS_WEBHOOK = 'https://hook.eu1.make.com/65lgf75ehkmnoojdmwpdbb33nfezocbi';
+
+  const hints = [
+    'Clique pour noter',
+    'Pas à mon goût.',
+    'Correct, mais sans plus.',
+    'Bonnes pâtes, j\'ai aimé !',
+    'Un régal, je repasserai commande.',
+    'Incroyable, le vrai goût de la Pasta qui fait du bien',
+  ];
+
+  let selectedNote = 0;
+
+  // ── Notation ────────────────────────────────────────────────────
+  const starEls = document.querySelectorAll('.star');
+  const hintEl  = document.getElementById('rating-hint');
+
+  function renderStars(upTo) {
+    starEls.forEach(s => s.classList.toggle('lit', +s.dataset.val <= upTo));
+  }
+
+  starEls.forEach(star => {
+    star.addEventListener('mouseenter', () => {
+      renderStars(+star.dataset.val);
+      hintEl.textContent = hints[+star.dataset.val];
+    });
+    star.addEventListener('mouseleave', () => {
+      renderStars(selectedNote);
+      hintEl.textContent = selectedNote ? hints[selectedNote] : 'Clique pour noter';
+    });
+    star.addEventListener('click', () => {
+      selectedNote = +star.dataset.val;
+      renderStars(selectedNote);
+      hintEl.textContent = hints[selectedNote];
+      updateBtn();
+    });
+  });
+
+  // ── Bouton ─────────────────────────────────────────────────────
+  function updateBtn() {
+    const prenom      = document.getElementById('input-prenom').value.trim();
+    const commentaire = document.getElementById('input-commentaire').value.trim();
+    document.getElementById('btn-submit').disabled = !(selectedNote > 0 && prenom && commentaire);
+
+  }
+  updateBtn();
+
+  // ── Envoi ──────────────────────────────────────────────────────
+  async function handleSubmit() {
+    const btn         = document.getElementById('btn-submit');
+    const prenom      = document.getElementById('input-prenom').value.trim();
+    const ville       = document.getElementById('input-ville').value.trim();
+    const commentaire = document.getElementById('input-commentaire').value.trim();
+
+    btn.disabled    = true;
+    btn.textContent = 'Envoi en cours…';
+
+    try {
+      await fetch(MAKE_REVIEWS_WEBHOOK, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ date: new Date().toISOString(), prenom, ville, note: selectedNote, commentaire }),
+      });
+    } catch (e) {}
+
+    document.getElementById('form-card').innerHTML = `
+      <div class="success-box">
+        <div class="success-icon">🙏</div>
+        <div class="success-title">Merci ${prenom} !</div>
+        <div class="success-text">
+          L'avis a bien été envoyé.<br>
+          Il aidera d'autres personnes à découvrir les produits.
+        </div>
+      </div>
+    `;
+  }
+</script>
+
+</body>
+</html>
