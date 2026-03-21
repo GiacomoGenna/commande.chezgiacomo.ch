@@ -524,6 +524,45 @@
       flex-shrink: 0;
     }
 
+    /* ── Avis clients ── */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .review-card {
+      background: #fff;
+      border: 1px solid #e8ddd4;
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+    .review-stars {
+      color: #e8a020;
+      font-size: 13px;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+    .review-text {
+      font-size: 13px;
+      color: #555;
+      font-family: sans-serif;
+      line-height: 1.55;
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+    .review-author {
+      font-size: 11px;
+      font-family: sans-serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #bbb;
+    }
+    @media (max-width: 520px) {
+      .reviews-grid { grid-template-columns: 1fr; }
+    }
+
     /* ── Page footer ── */
     .page-footer {
       margin-top: 40px;
@@ -575,6 +614,12 @@
     <strong>Comment ça marche ?</strong> Choisis tes produits et les quantités, remplis tes coordonnées en bas, puis envoie ta commande en un clic.
     Le bouton <strong>WhatsApp</strong> ouvre une conversation avec le message déjà rédigé — idéal pour échanger directement.
     Le bouton <strong>Email</strong> ouvre ton application mail avec ta commande prête à être envoyée.
+  </div>
+
+  <!-- AVIS CLIENTS -->
+  <div id="reviews-section" style="display:none">
+    <div class="section-title">Ce qu'ils en disent</div>
+    <div class="reviews-grid" id="reviews-grid"></div>
   </div>
 
   <!-- PACK DÉCOUVERTE -->
@@ -1041,6 +1086,44 @@
   }
 
   updateTotal();
+
+  // ── Avis clients (Google Sheets) ───────────────────────────────
+  const SHEET_ID = '1AQN1odaRphvTpkhLEuvFKa4P-mtPOTFrsFCtc_1f1QM';
+
+  async function loadReviews() {
+    try {
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+      const res  = await fetch(url);
+      const text = await res.text();
+      const json = JSON.parse(text.match(/setResponse\(([\s\S]+)\)/)[1]);
+      const rows = (json.table?.rows || []).filter(r => r.c && r.c[3]?.v && r.c[4]?.v);
+      if (rows.length === 0) return;
+
+      // Afficher les 6 plus récents en premier
+      const recent = rows.slice().reverse().slice(0, 6);
+      const grid = document.getElementById('reviews-grid');
+      grid.innerHTML = recent.map(row => {
+        const prenom      = row.c[1]?.v || '';
+        const ville       = row.c[2]?.v || '';
+        const note        = Math.round(row.c[3]?.v || 5);
+        const commentaire = row.c[4]?.v || '';
+        const stars       = '★'.repeat(note) + '☆'.repeat(5 - note);
+        const author      = [prenom, ville].filter(Boolean).join(', ');
+        return `
+          <div class="review-card">
+            <div class="review-stars">${stars}</div>
+            <div class="review-text">« ${commentaire} »</div>
+            ${author ? `<div class="review-author">${author}</div>` : ''}
+          </div>`;
+      }).join('');
+
+      document.getElementById('reviews-section').style.display = 'block';
+    } catch (e) {
+      // Silencieux si le sheet n'est pas accessible
+    }
+  }
+
+  loadReviews();
 </script>
 
 </body>
