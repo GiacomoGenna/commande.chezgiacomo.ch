@@ -157,6 +157,30 @@
     .success-title { font-size: 22px; font-weight: 400; color: #2c1a0e; margin-bottom: 12px; }
     .success-text  { font-family: sans-serif; font-size: 14px; color: #888; line-height: 1.65; }
 
+    /* ── Avis existants ── */
+    .reviews-section { margin-top: 40px; }
+    .reviews-title {
+      font-family: sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #c2541a;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e8ddd4;
+    }
+    .review-card {
+      background: #fff;
+      border: 1px solid #e8ddd4;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .review-stars { color: #c2541a; font-size: 13px; margin-bottom: 6px; letter-spacing: 1px; }
+    .review-text  { font-size: 13px; color: #555; font-family: sans-serif; line-height: 1.55; margin-bottom: 8px; font-style: italic; }
+    .review-author { font-size: 11px; font-family: sans-serif; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #bbb; }
+
     /* ── Pied de page ── */
     .page-footer { margin-top: 36px; text-align: center; font-family: sans-serif; font-size: 13px; }
     .page-footer a { color: #bbb; text-decoration: none; }
@@ -221,6 +245,12 @@
 
   </div>
 
+  <!-- AVIS EXISTANTS -->
+  <div class="reviews-section" id="reviews-section" style="display:none">
+    <div class="reviews-title">Ce qu'ils en disent</div>
+    <div id="reviews-list"></div>
+  </div>
+
   <footer class="page-footer">
     <a href="https://www.chezgiacomo.ch">← Retour sur chezgiacomo.ch</a>
   </footer>
@@ -273,6 +303,40 @@
 
   }
   updateBtn();
+
+  // ── Avis existants (Google Sheets) ─────────────────────────────
+  const SHEET_ID = '1AQN1odaRphvTpkhLEuvFKa4P-mtPOTFrsFCtc_1f1QM';
+
+  async function loadReviews() {
+    try {
+      const url  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+      const res  = await fetch(url);
+      const text = await res.text();
+      const json = JSON.parse(text.match(/setResponse\(([\s\S]+)\)/)[1]);
+      const rows = (json.table?.rows || []).filter(r => r.c && r.c[3]?.v && r.c[4]?.v);
+      if (rows.length === 0) return;
+
+      const list = document.getElementById('reviews-list');
+      list.innerHTML = rows.slice().reverse().map(row => {
+        const prenom      = row.c[1]?.v || '';
+        const ville       = row.c[2]?.v || '';
+        const note        = Math.round(row.c[3]?.v || 5);
+        const commentaire = row.c[4]?.v || '';
+        const stars       = '★'.repeat(note) + '☆'.repeat(5 - note);
+        const author      = [prenom, ville].filter(Boolean).join(', ');
+        return `
+          <div class="review-card">
+            <div class="review-stars">${stars}</div>
+            <div class="review-text">« ${commentaire} »</div>
+            ${author ? `<div class="review-author">${author}</div>` : ''}
+          </div>`;
+      }).join('');
+
+      document.getElementById('reviews-section').style.display = 'block';
+    } catch (e) {}
+  }
+
+  loadReviews();
 
   // ── Envoi ──────────────────────────────────────────────────────
   async function handleSubmit() {
