@@ -616,6 +616,7 @@
 
     /* ── Responsive ── */
     @media (max-width: 520px) {
+      .back-btn-text { display: none; }
       .field-row { grid-template-columns: 1fr; }
       .btn-action { padding: 11px 13px; font-size: 13px; gap: 6px; }
       .btn-action span { display: none; }
@@ -636,7 +637,7 @@
 <body>
 
 <header>
-  <a href="https://www.chezgiacomo.ch" class="back-btn">← Retour sur chezgiacomo.ch</a>
+  <a href="https://www.chezgiacomo.ch" class="back-btn">← <span class="back-btn-text">Retour sur chezgiacomo.ch</span></a>
   <div class="brand">Chez Giacomo</div>
   <h1>Ta commande</h1>
   <p>Pâtes &amp; Farines artisanales de Sicile</p>
