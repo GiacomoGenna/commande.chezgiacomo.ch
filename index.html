@@ -89,9 +89,9 @@
     /* ── Section titles ── */
     .section-title {
       font-family: sans-serif;
-      font-size: 14px;
+      font-size: 17px;
       font-weight: 700;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
       text-transform: uppercase;
       color: #c2541a;
       margin: 32px 0 12px;
@@ -243,9 +243,9 @@
     /* ── Formulaire contact ── */
     .form-section-title {
       font-family: sans-serif;
-      font-size: 14px;
+      font-size: 17px;
       font-weight: 700;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
       text-transform: uppercase;
       color: #c2541a;
       margin: 32px 0 16px;
@@ -523,6 +523,19 @@
       cursor: pointer;
       flex-shrink: 0;
     }
+
+    /* ── Stock badges ── */
+    .stock-badge {
+      display: inline-block;
+      font-family: sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-top: 5px;
+    }
+    .stock-low  { background: #fff3e0; color: #e07800; }
+    .stock-out  { background: #ffeaea; color: #d03030; }
 
     /* ── Avis clients ── */
     .reviews-grid {
@@ -830,13 +843,14 @@
         <div class="product-info">
           <div class="product-name">${p.name}</div>
           <div class="product-sub">${p.sub}</div>
+          <div id="stock-${p.id}"></div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0">
           <div class="product-price" id="price-${p.id}">${priceNormal.toFixed(2)} CHF</div>
           <div class="qty-stepper">
             <button onclick="changeQty('${p.id}', -1)">−</button>
             <div class="qty-val" id="qty-${p.id}">0</div>
-            <button onclick="changeQty('${p.id}', +1)">+</button>
+            <button id="plus-${p.id}" onclick="changeQty('${p.id}', +1)">+</button>
           </div>
         </div>
       `;
@@ -1085,8 +1099,43 @@
 
   updateTotal();
 
-  // ── Avis clients (Google Sheets) ───────────────────────────────
+  // ── Stock (Google Sheets — onglet "Stock") ─────────────────────
   const SHEET_ID = '1AQN1odaRphvTpkhLEuvFKa4P-mtPOTFrsFCtc_1f1QM';
+
+  async function loadStock() {
+    try {
+      const url  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Stock`;
+      const res  = await fetch(url);
+      const text = await res.text();
+      const json = JSON.parse(text.match(/setResponse\(([\s\S]+)\)/)[1]);
+      const rows = json.table?.rows || [];
+
+      // Construire un dictionnaire codeBexio → stock
+      const stockMap = {};
+      rows.forEach(row => {
+        const code  = row.c[0]?.v;
+        const stock = Math.round(row.c[2]?.v ?? 999);
+        if (code) stockMap[code] = stock;
+      });
+
+      // Appliquer les badges sur chaque produit
+      [...pates, ...farines1kg, ...farines5kg].forEach(p => {
+        const s = stockMap[p.codeBexio];
+        if (s === undefined) return;
+        const badgeEl = document.getElementById('stock-' + p.id);
+        const plusBtn = document.getElementById('plus-' + p.id);
+        if (!badgeEl) return;
+        if (s === 0) {
+          badgeEl.innerHTML = `<span class="stock-badge stock-out">Rupture de stock</span>`;
+          if (plusBtn) plusBtn.disabled = true;
+        } else if (s <= 10) {
+          badgeEl.innerHTML = `<span class="stock-badge stock-low">Plus que ${s} en stock</span>`;
+        }
+      });
+    } catch (e) {}
+  }
+
+  // ── Avis clients (Google Sheets) ───────────────────────────────
 
   async function loadReviews() {
     try {
@@ -1121,6 +1170,7 @@
     }
   }
 
+  loadStock();
   loadReviews();
 </script>
 
