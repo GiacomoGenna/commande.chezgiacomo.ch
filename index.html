@@ -641,20 +641,20 @@
     <div class="product-info">
       <div class="pack-badge">Coup de coeur</div>
       <div class="product-name">Pack Découverte — 4 kg</div>
-      <div class="pack-desc">4 paquets de pâtes variés + 2 Mix Farine — choisis tes 2 préférés :</div>
+      <div class="pack-desc">4 paquets de pâtes variés + 2 Mix Farine — choisis 1 ou 2 :</div>
       <div class="pack-mix">
         <label><input type="checkbox" id="pack-mix-pizza" onchange="limitPackMix()"> Mix Pizza</label>
         <label><input type="checkbox" id="pack-mix-pain" onchange="limitPackMix()"> Mix Pain</label>
         <label><input type="checkbox" id="pack-mix-pasta" onchange="limitPackMix()"> Mix Pasta</label>
       </div>
-      <div class="pack-mix-hint">Sélectionne 2 parmi les 3</div>
+      <div class="pack-mix-hint" id="pack-mix-hint">Choisis 1 mix (×2) ou 2 mix différents</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0">
       <div class="product-price">37.00 CHF</div>
       <div class="qty-stepper">
         <button onclick="changeQty('pack', -1)">−</button>
         <div class="qty-val" id="qty-pack">0</div>
-        <button onclick="changeQty('pack', +1)">+</button>
+        <button id="pack-plus-btn" onclick="changeQty('pack', +1)" disabled style="opacity:0.35;cursor:default">+</button>
       </div>
     </div>
   </div>
@@ -862,16 +862,28 @@
   renderProducts('farines-1kg-list', farines1kg, 9.00);
   renderProducts('farines-5kg-list', farines5kg, 35.00);
 
-  // ── Limiter sélection mix à 2 ─────────────────────────────────
+  // ── Sélection mix pack (1 ou 2 obligatoire, max 2) ───────────────
   const packMixIds = ['pack-mix-pizza', 'pack-mix-pain', 'pack-mix-pasta'];
   function limitPackMix() {
     const checked = packMixIds.filter(id => document.getElementById(id).checked);
+    // Bloquer le 3e si déjà 2 cochés
     packMixIds.forEach(id => {
       const el = document.getElementById(id);
       el.disabled = checked.length >= 2 && !el.checked;
       el.closest('label').style.opacity = el.disabled ? '0.4' : '1';
       el.closest('label').style.cursor = el.disabled ? 'not-allowed' : 'pointer';
     });
+    // Activer le + seulement si au moins 1 mix choisi
+    const plusBtn = document.getElementById('pack-plus-btn');
+    plusBtn.disabled = checked.length === 0;
+    plusBtn.style.opacity = checked.length === 0 ? '0.35' : '1';
+    plusBtn.style.cursor  = checked.length === 0 ? 'default' : 'pointer';
+    // Mettre à jour le hint
+    const hint = document.getElementById('pack-mix-hint');
+    if (checked.length === 0) hint.textContent = 'Choisis 1 mix (×2) ou 2 mix différents';
+    else if (checked.length === 1) hint.textContent = 'Tu recevras 2× ce mix — ou coche un 2e pour varier';
+    else hint.textContent = '1× chaque mix sélectionné';
+    updateTotal();
   }
 
   // ── Modifier quantité ──────────────────────────────────────────
@@ -895,13 +907,17 @@
       const sub = q * 37.00;
       total += sub; items += q;
 
-      const mixesSelected = [
+      const mixesRaw = [
         document.getElementById('pack-mix-pizza').checked ? { codeBexio: 'MIX-PIZ-1KG', nom: 'Mix Pizza 1 kg' } : null,
         document.getElementById('pack-mix-pain').checked  ? { codeBexio: 'MIX-PAI-1KG', nom: 'Mix Pain 1 kg'  } : null,
         document.getElementById('pack-mix-pasta').checked ? { codeBexio: 'MIX-PAT-1KG', nom: 'Mix Pasta 1 kg' } : null,
       ].filter(Boolean);
-      const mixNames = mixesSelected.map(m => m.nom.replace(' 1 kg', ''));
-      const mixText = mixNames.length > 0 ? ` — farines : ${mixNames.join(' + ')}` : ' — farines : à préciser';
+      // Si 1 seul mix choisi → compté ×2
+      const mixesSelected = mixesRaw.length === 1 ? [mixesRaw[0], mixesRaw[0]] : mixesRaw;
+      const mixNames = mixesRaw.map(m => m.nom.replace(' 1 kg', ''));
+      const mixText  = mixesRaw.length === 1
+        ? ` — farines : ${mixNames[0]} ×2`
+        : ` — farines : ${mixNames.join(' + ')}`;
       lines.push(`Pack Découverte x${q}${mixText} = ${sub.toFixed(2)} CHF`);
 
       // Lignes individuelles pour Bexio
@@ -909,13 +925,10 @@
       pates.filter(p => packPatesIds.includes(p.id)).forEach(p => {
         lignesDetails.push({ type: 'article', codeBexio: p.codeBexio, nom: `${p.name} 500 g`, quantite: q, prixUnitaire: 7.50, sousTotal: q * 7.50 });
       });
+      // 2 lignes farine (identiques si 1 seul mix)
       mixesSelected.forEach(m => {
         lignesDetails.push({ type: 'article', codeBexio: m.codeBexio, nom: m.nom, quantite: q, prixUnitaire: 9.00, sousTotal: q * 9.00 });
       });
-      // Compléter à 2 farines si pas encore sélectionnées
-      for (let i = mixesSelected.length; i < 2; i++) {
-        lignesDetails.push({ type: 'article', codeBexio: null, nom: 'Mix Farine — à préciser', quantite: q, prixUnitaire: 9.00, sousTotal: q * 9.00 });
-      }
       // Remise Pack : 4×7.50 + 2×9.00 = 48.00 → 37.00 = -11.00 CHF (-22.9%)
       const remiseTotal = parseFloat((q * 48.00 - q * 37.00).toFixed(2));
       lignesDetails.push({ type: 'discount', nom: 'Remise Pack Découverte (-22.9%)', montant: remiseTotal, pourcentage: 22.92 });
