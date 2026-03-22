@@ -1060,7 +1060,7 @@
     const { prenom, nom, adresse, npa, ville, delivery, deliveryAutre, email, tel, motivations } = contact;
     const deliveryLabel = delivery === 'livraison' ? 'Livraison — région NE/Bienne'
       : delivery === 'autre' ? `Autre : ${deliveryAutre || '(à préciser)'}`
-      : 'Retrait — La Neuveville';
+      : 'Retrait — La Neuveville, Montagu 24';
     let msg = `Bonjour Giacomo,${sep}${sep}`;
     msg += `J'aimerais passer une commande de pâtes et farines de blé ancien de Sicile !${sep}${sep}`;
     msg += `Voici ma commande :${sep}${sep}`;
@@ -1073,6 +1073,7 @@
     if (email)   msg += `${email}${sep}`;
     if (tel)     msg += `${tel}${sep}`;
     msg += `${sep}Mode de réception : ${deliveryLabel}${sep}`;
+    msg += `Paiement par Twint ou facture.${sep}`;
     if (motivations && motivations.length > 0) {
       msg += `${sep}Raison(s) d'achat :${sep}`;
       motivations.forEach(m => { msg += `- ${m}${sep}`; });
