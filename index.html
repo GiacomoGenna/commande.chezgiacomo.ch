@@ -842,9 +842,8 @@
       div.innerHTML = `
         <img class="product-img" src="${p.img}" alt="${p.name}" onerror="this.outerHTML='<div class=product-img-placeholder></div>'">
         <div class="product-info">
-          <div class="product-name">${p.name}</div>
+          <div class="product-name">${p.name} <span id="stock-${p.id}"></span></div>
           <div class="product-sub">${p.sub}</div>
-          <div id="stock-${p.id}"></div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0">
           <div class="product-price" id="price-${p.id}">${priceNormal.toFixed(2)} CHF</div>
