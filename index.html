@@ -901,6 +901,13 @@
       el.closest('label').style.opacity = el.disabled ? '0.4' : '1';
       el.closest('label').style.cursor = el.disabled ? 'not-allowed' : 'pointer';
     });
+    // Passer à 1 automatiquement dès qu'un mix est coché
+    if (checked.length > 0 && quantities.pack === 0) {
+      quantities.pack = 1;
+      document.getElementById('qty-pack').textContent = 1;
+      document.getElementById('card-pack').classList.add('active');
+      updateTotal();
+    }
     // Activer le + seulement si au moins 1 mix choisi
     const plusBtn = document.getElementById('pack-plus-btn');
     plusBtn.disabled = checked.length === 0;
