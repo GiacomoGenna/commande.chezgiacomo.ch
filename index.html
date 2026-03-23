@@ -1127,6 +1127,20 @@
     }).catch(() => {}); // silencieux si erreur réseau
   }
 
+  // ── Verrouillage après envoi ───────────────────────────────────
+  function lockAfterSend() {
+    const btnWa    = document.getElementById('btn-wa');
+    const btnEmail = document.getElementById('btn-email');
+    btnWa.classList.add('disabled');
+    btnEmail.classList.add('disabled');
+    btnWa.onclick    = null;
+    btnEmail.onclick = null;
+    const sent = document.createElement('div');
+    sent.style.cssText = 'text-align:center;font-family:sans-serif;font-size:13px;color:#888;margin-top:8px';
+    sent.textContent = '✓ Commande envoyée — merci !';
+    document.querySelector('.sticky-footer-inner').appendChild(sent);
+  }
+
   // ── WhatsApp ───────────────────────────────────────────────────
   function handleWhatsApp(e) {
     e.preventDefault();
@@ -1136,6 +1150,7 @@
     sendToMake(contact, lines, lignesDetails, total, 'whatsapp');
     const msg = buildMessage(lines, total, contact);
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+    lockAfterSend();
   }
 
   // ── Email ──────────────────────────────────────────────────────
@@ -1149,6 +1164,7 @@
     const subject = `Commande Chez Giacomo${name ? ' - ' + name : ''}`;
     const body = buildMessage(lines, total, contact);
     window.location.href = `mailto:${EMAIL_TO}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    lockAfterSend();
   }
 
   updateTotal();
