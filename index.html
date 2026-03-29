@@ -557,7 +557,7 @@
       margin-top: 5px;
     }
     .stock-low  { background: #fff3e0; color: #e07800; }
-    .stock-out  { background: #ffeaea; color: #d03030; }
+    .stock-out  { background: #fff3e0; color: #c2541a; }
 
     /* ── Avis clients ── */
     .reviews-grid {
@@ -890,6 +890,8 @@
   renderProducts('farines-1kg-list', farines1kg, 9.00);
   renderProducts('farines-5kg-list', farines5kg, 35.00);
 
+  const preorderIds = new Set(); // produits avec stock = 0
+
   // ── Sélection mix pack (1 ou 2 obligatoire, max 2) ───────────────
   const packMixIds = ['pack-mix-pizza', 'pack-mix-pain', 'pack-mix-pasta'];
   function limitPackMix() {
@@ -981,7 +983,8 @@
       if (q > 0) {
         const sub = q * prixPate;
         total += sub; items += q;
-        lines.push(`${p.name} 500 g x${q} = ${sub.toFixed(2)} CHF`);
+        const preoPate = preorderIds.has(p.id) ? ' (pré-commande — livraison mai)' : '';
+        lines.push(`${p.name} 500 g x${q} = ${sub.toFixed(2)} CHF${preoPate}`);
         lignesDetails.push({ type: 'article', codeBexio: p.codeBexio, nom: `${p.name} 500 g`, quantite: q, prixUnitaire: prixPate, sousTotal: sub });
       }
     });
@@ -1000,7 +1003,8 @@
       if (q > 0) {
         const sub = q * prixF1;
         total += sub; items += q;
-        lines.push(`${p.name} 1 kg x${q} = ${sub.toFixed(2)} CHF`);
+        const preoF1 = preorderIds.has(p.id) ? ' (pré-commande — livraison mai)' : '';
+        lines.push(`${p.name} 1 kg x${q} = ${sub.toFixed(2)} CHF${preoF1}`);
         lignesDetails.push({ type: 'article', codeBexio: p.codeBexio, nom: `${p.name} 1 kg`, quantite: q, prixUnitaire: prixF1, sousTotal: sub });
       }
     });
@@ -1017,7 +1021,8 @@
       if (q > 0) {
         const sub = q * 35.00;
         total += sub; items += q;
-        lines.push(`${p.name} 5 kg x${q} = ${sub.toFixed(2)} CHF`);
+        const preoF5 = preorderIds.has(p.id) ? ' (pré-commande — livraison mai)' : '';
+        lines.push(`${p.name} 5 kg x${q} = ${sub.toFixed(2)} CHF${preoF5}`);
         lignesDetails.push({ type: 'article', codeBexio: p.codeBexio, nom: `${p.name} 5 kg`, quantite: q, prixUnitaire: 35.00, sousTotal: sub });
       }
     });
@@ -1196,8 +1201,8 @@
         const plusBtn = document.getElementById('plus-' + p.id);
         if (!badgeEl) return;
         if (s === 0) {
-          badgeEl.innerHTML = `<span class="stock-badge stock-out">Rupture de stock</span>`;
-          if (plusBtn) plusBtn.disabled = true;
+          badgeEl.innerHTML = `<span class="stock-badge stock-out">🕐 Pré-commande — disponible en mai</span>`;
+          preorderIds.add(p.id);
         } else if (s <= 10) {
           badgeEl.innerHTML = `<span class="stock-badge stock-low">Plus que ${s} en stock</span>`;
         }
