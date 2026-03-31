@@ -666,9 +666,9 @@
       <div class="product-name">Pack Découverte — 4 kg</div>
       <div class="pack-desc">4 paquets de pâtes variés + 2 Mix Farine</div>
       <div class="pack-mix">
-        <label><input type="checkbox" id="pack-mix-pizza" onchange="limitPackMix()"> Mix Pizza</label>
-        <label><input type="checkbox" id="pack-mix-pain" onchange="limitPackMix()"> Mix Pain</label>
-        <label><input type="checkbox" id="pack-mix-pasta" onchange="limitPackMix()"> Mix Pasta</label>
+        <label><input type="checkbox" id="pack-mix-pizza" onchange="limitPackMix()"> Mix Pizza<span id="pack-mix-pizza-stock"></span></label>
+        <label><input type="checkbox" id="pack-mix-pain" onchange="limitPackMix()"> Mix Pain<span id="pack-mix-pain-stock"></span></label>
+        <label><input type="checkbox" id="pack-mix-pasta" onchange="limitPackMix()"> Mix Pasta<span id="pack-mix-pasta-stock"></span></label>
       </div>
       <div class="pack-mix-hint" id="pack-mix-hint">Choisis 1 mix (×2) ou 2 mix différents</div>
     </div>
@@ -1200,11 +1200,22 @@
         const badgeEl = document.getElementById('stock-' + p.id);
         const plusBtn = document.getElementById('plus-' + p.id);
         if (!badgeEl) return;
-        if (s === 0) {
+        if (s <= 0) {
           badgeEl.innerHTML = `<span class="stock-badge stock-out">🕐 Pré-commande — disponible en mai</span>`;
           preorderIds.add(p.id);
         } else if (s <= 10) {
           badgeEl.innerHTML = `<span class="stock-badge stock-low">Plus que ${s} en stock</span>`;
+        }
+      // Indicateurs pré-commande sur les mix du Pack Découverte
+      const packMixMap = {
+        'pack-mix-pizza': stockMap['MIX-PIZ-1KG'],
+        'pack-mix-pain':  stockMap['MIX-PAI-1KG'],
+        'pack-mix-pasta': stockMap['MIX-PAT-1KG'],
+      };
+      Object.entries(packMixMap).forEach(([id, s]) => {
+        const el = document.getElementById(id + '-stock');
+        if (el && s !== undefined && s <= 0) {
+          el.innerHTML = ' <span style="font-size:10px;color:#d03030;font-weight:700">· pré-commande</span>';
         }
       });
     } catch (e) {}
