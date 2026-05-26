@@ -102,9 +102,12 @@ serve.py                        ← Python dev server helper
 | Busiata | `PAST-BUS-500` | 7.50 CHF (6.00 dès 3) |
 | Spaghetti | `PAST-SPA-500` | 7.50 CHF (6.00 dès 3) |
 | Linguine | `PAST-LIN-500` | 7.50 CHF (6.00 dès 3) |
+| Fettuccine | `PAST-FET-500` | 7.50 CHF (6.00 dès 3) |
 | Mezze Maniche | `PAST-MEZ-500` | 7.50 CHF (6.00 dès 3) |
 | Penne Rigate | `PAST-PEN-500` | 7.50 CHF (6.00 dès 3) |
+| Fusilli | `PAST-FUS-500` | 7.50 CHF (6.00 dès 3) |
 | Pappardelle | `PAST-PAP-500` | 7.50 CHF (6.00 dès 3) |
+| Ditali | `PAST-DIT-500` | 7.50 CHF (6.00 dès 3) |
 
 ### Farines — 1 kg
 | Name | Bexio code | Price |
