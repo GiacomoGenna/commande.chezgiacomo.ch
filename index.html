@@ -985,7 +985,7 @@
       if (q > 0) {
         const sub = q * prixPate;
         total += sub; items += q;
-        const preoPate = preorderIds.has(p.id) ? ' (pré-commande — livraison début juin)' : '';
+        const preoPate = preorderIds.has(p.id) ? ' (pré-commande — livraison mi juin)' : '';
         lines.push(`${p.name} 500 g x${q} = ${sub.toFixed(2)} CHF${preoPate}`);
         lignesDetails.push({ type: 'article', codeBexio: p.codeBexio, nom: `${p.name} 500 g`, quantite: q, prixUnitaire: prixPate, sousTotal: sub });
       }
@@ -1005,7 +1005,7 @@
       if (q > 0) {
         const sub = q * prixF1;
         total += sub; items += q;
-        const preoF1 = preorderIds.has(p.id) ? ' (pré-commande — livraison début juin)' : '';
+        const preoF1 = preorderIds.has(p.id) ? ' (pré-commande — livraison mi juin)' : '';
         lines.push(`${p.name} 1 kg x${q} = ${sub.toFixed(2)} CHF${preoF1}`);
         lignesDetails.push({ type: 'article', codeBexio: p.codeBexio, nom: `${p.name} 1 kg`, quantite: q, prixUnitaire: prixF1, sousTotal: sub });
       }
@@ -1023,7 +1023,7 @@
       if (q > 0) {
         const sub = q * 35.00;
         total += sub; items += q;
-        const preoF5 = preorderIds.has(p.id) ? ' (pré-commande — livraison début juin)' : '';
+        const preoF5 = preorderIds.has(p.id) ? ' (pré-commande — livraison mi juin)' : '';
         lines.push(`${p.name} 5 kg x${q} = ${sub.toFixed(2)} CHF${preoF5}`);
         lignesDetails.push({ type: 'article', codeBexio: p.codeBexio, nom: `${p.name} 5 kg`, quantite: q, prixUnitaire: 35.00, sousTotal: sub });
       }
@@ -1203,7 +1203,7 @@
         const plusBtn = document.getElementById('plus-' + p.id);
         if (!badgeEl) return;
         if (s <= 0) {
-          badgeEl.innerHTML = `<span class="stock-badge stock-out">🕐 En pré-commande pour livraison début juin</span>`;
+          badgeEl.innerHTML = `<span class="stock-badge stock-out">🕐 En pré-commande pour livraison mi juin</span>`;
           preorderIds.add(p.id);
         } else if (s <= 10) {
           badgeEl.innerHTML = `<span class="stock-badge stock-low">Plus que ${s} en stock</span>`;
