@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Commander – Chez Giacomo | Pâtes &amp; Farines de Sicile</title>
+  <title>Commander - Chez Giacomo | Pâtes &amp; Farines de Sicile</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23fdf8f3'/><text x='16' y='23' text-anchor='middle' font-family='Georgia,serif' font-size='16' font-weight='bold' fill='%23c2541a'>CG</text></svg>">
   <meta name="description" content="Commandez en ligne les pâtes artisanales et farines de blé ancien de Sicile. Retrait à La Neuveville, livraison région NE/Bienne." />
-  <!-- Open Graph — mettre à jour og:url et og:image avec votre URL finale -->
+  <!-- Open Graph -->
   <meta property="og:type"        content="website" />
-  <meta property="og:title"       content="Commander – Chez Giacomo | Pâtes &amp; Farines de Sicile" />
+  <meta property="og:title"       content="Commander - Chez Giacomo | Pâtes &amp; Farines de Sicile" />
   <meta property="og:description" content="Commandez en ligne les pâtes artisanales et farines de blé ancien de Sicile. Retrait à La Neuveville, livraison région NE/Bienne." />
-  <meta property="og:image"       content="pasta artigianale Mulino Angelica.jpg" />
-  <meta property="og:url"         content="https://giacomogenna.github.io/commande.chezgiacomo.ch/" />
+  <meta property="og:image"       content="https://commande.chezgiacomo.ch/pasta%20artigianale%20Mulino%20Angelica.jpg" />
+  <meta property="og:url"         content="https://commande.chezgiacomo.ch/" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -687,7 +687,7 @@
 
   <!-- INTRO -->
   <div class="intro-box">
-    <strong>Comment ça marche ?</strong> Sélectionne tes produits et envoie ta commande en un clic — par <strong>WhatsApp</strong> ou par <strong>Email</strong>.
+    <strong>Comment ça marche ?</strong> Sélectionne tes produits et envoie ta commande en un clic - par <strong>WhatsApp</strong> ou par <strong>Email</strong>.
   </div>
 
   <!-- AVIS CLIENTS (widget custom - avis Google) -->
@@ -1026,13 +1026,13 @@
   </div>
 
   <!-- PACK DÉCOUVERTE -->
-  <div class="section-title">Pack ideal pour commencer</div>
+  <div class="section-title">Pack idéal pour commencer</div>
 
   <div class="pack-card" id="card-pack">
     <img class="product-img" src="pasta artigianale Mulino Angelica.jpg" alt="Pack Découverte" onerror="this.style.display='none'">
     <div class="product-info">
       <div class="pack-badge">Coup de coeur</div>
-      <div class="product-name">Pack Découverte — 4 kg</div>
+      <div class="product-name">Pack Découverte - 4 kg</div>
       <div class="pack-desc">4 paquets de pâtes variés + 2 Mix Farine</div>
       <div class="pack-mix">
         <label><input type="checkbox" id="pack-mix-pizza" onchange="limitPackMix()"> Mix Pizza<span id="pack-mix-pizza-stock"></span></label>
@@ -1053,7 +1053,7 @@
 
   <!-- PÂTES -->
   <div class="section-title">
-    Pâtes artisanales — 500 g
+    Pâtes artisanales - 500 g
     <span class="discount-badge">6.00 CHF dès 3 paquets</span>
   </div>
 
@@ -1061,14 +1061,14 @@
 
   <!-- FARINES 1KG -->
   <div class="section-title">
-    Farines — 1 kg
+    Farines - 1 kg
     <span class="discount-badge">7.50 CHF dès 3 paquets</span>
   </div>
 
   <div id="farines-1kg-list"></div>
 
   <!-- FARINES 5KG -->
-  <div class="section-title">Farines — 5 kg</div>
+  <div class="section-title">Farines - 5 kg</div>
 
   <div id="farines-5kg-list"></div>
 
@@ -1134,11 +1134,11 @@
       <div class="delivery-choice">
         <label>
           <input type="radio" name="delivery" id="delivery-retrait" value="retrait" checked onchange="updateTotal()" />
-          Retrait — La Neuveville (gratuit)
+          Retrait - La Neuveville (gratuit)
         </label>
         <label>
           <input type="radio" name="delivery" id="delivery-livraison" value="livraison" onchange="updateTotal()" />
-          Livraison — région NE/Bienne (dès 70 CHF)
+          Livraison - région NE/Bienne (dès 70 CHF)
         </label>
         <label class="delivery-autre">
           <input type="radio" name="delivery" id="delivery-autre" value="autre" onchange="updateTotal()" />
@@ -1229,15 +1229,15 @@
   ];
 
   const farines1kg = [
-    { id: 'mix-pizza-1kg', name: 'Mix Pizza',  sub: 'Farine spéciale pizza croustillante — 1 kg', img: 'Mix farina - Pizza.jpg', codeBexio: 'MIX-PIZ-1KG' },
-    { id: 'mix-pain-1kg',  name: 'Mix Pain',   sub: 'Idéale pour la boulangerie artisanale — 1 kg', img: 'Mix farina - Pane.jpg', codeBexio: 'MIX-PAI-1KG' },
-    { id: 'mix-pasta-1kg', name: 'Mix Pasta',  sub: 'Farine pour pâtes fraîches maison — 1 kg',      img: 'Mix farina - Pasta.jpg', codeBexio: 'MIX-PAT-1KG' },
+    { id: 'mix-pizza-1kg', name: 'Mix Pizza',  sub: 'Farine spéciale pizza croustillante - 1 kg', img: 'Mix farina - Pizza.jpg', codeBexio: 'MIX-PIZ-1KG' },
+    { id: 'mix-pain-1kg',  name: 'Mix Pain',   sub: 'Idéale pour la boulangerie artisanale - 1 kg', img: 'Mix farina - Pane.jpg', codeBexio: 'MIX-PAI-1KG' },
+    { id: 'mix-pasta-1kg', name: 'Mix Pasta',  sub: 'Farine pour pâtes fraîches maison - 1 kg',      img: 'Mix farina - Pasta.jpg', codeBexio: 'MIX-PAT-1KG' },
   ];
 
   const farines5kg = [
-    { id: 'mix-pizza-5kg', name: 'Mix Pizza',  sub: 'Farine spéciale pizza croustillante — 5 kg', img: 'Mix farina - Pizza.jpg', codeBexio: 'MIX-PIZ-5KG' },
-    { id: 'mix-pain-5kg',  name: 'Mix Pain',   sub: 'Idéale pour la boulangerie artisanale — 5 kg', img: 'Mix farina - Pane.jpg', codeBexio: 'MIX-PAI-5KG' },
-    { id: 'mix-pasta-5kg', name: 'Mix Pasta',  sub: 'Farine pour pâtes fraîches maison — 5 kg',      img: 'Mix farina - Pasta.jpg', codeBexio: 'MIX-PAT-5KG' },
+    { id: 'mix-pizza-5kg', name: 'Mix Pizza',  sub: 'Farine spéciale pizza croustillante - 5 kg', img: 'Mix farina - Pizza.jpg', codeBexio: 'MIX-PIZ-5KG' },
+    { id: 'mix-pain-5kg',  name: 'Mix Pain',   sub: 'Idéale pour la boulangerie artisanale - 5 kg', img: 'Mix farina - Pane.jpg', codeBexio: 'MIX-PAI-5KG' },
+    { id: 'mix-pasta-5kg', name: 'Mix Pasta',  sub: 'Farine pour pâtes fraîches maison - 5 kg',      img: 'Mix farina - Pasta.jpg', codeBexio: 'MIX-PAT-5KG' },
   ];
 
   // ── Quantités ──────────────────────────────────────────────────
@@ -1308,7 +1308,7 @@
     // Mettre à jour le hint
     const hint = document.getElementById('pack-mix-hint');
     if (checked.length === 0) hint.textContent = 'Choisis 1 mix (×2) ou 2 mix différents';
-    else if (checked.length === 1) hint.textContent = 'Tu recevras 2× ce mix — ou coche un 2e pour varier';
+    else if (checked.length === 1) hint.textContent = 'Tu recevras 2× ce mix - ou coche un 2e pour varier';
     else hint.textContent = '1× chaque mix sélectionné';
     updateTotal();
   }
@@ -1343,8 +1343,8 @@
       const mixesSelected = mixesRaw.length === 1 ? [mixesRaw[0], mixesRaw[0]] : mixesRaw;
       const mixNames = mixesRaw.map(m => m.nom.replace(' 1 kg', ''));
       const mixText  = mixesRaw.length === 1
-        ? ` — farines : ${mixNames[0]} ×2`
-        : ` — farines : ${mixNames.join(' + ')}`;
+        ? ` - farines : ${mixNames[0]} ×2`
+        : ` - farines : ${mixNames.join(' + ')}`;
       lines.push(`Pack Découverte x${q}${mixText} = ${sub.toFixed(2)} CHF`);
 
       // Lignes individuelles pour Bexio
@@ -1368,7 +1368,7 @@
       if (q > 0) {
         const sub = q * prixPate;
         total += sub; items += q;
-        const preoPate = preorderIds.has(p.id) ? ' (pré-commande — livraison mi juin)' : '';
+        const preoPate = preorderIds.has(p.id) ? ' (pré-commande - livraison mi juin)' : '';
         lines.push(`${p.name} 500 g x${q} = ${sub.toFixed(2)} CHF${preoPate}`);
         lignesDetails.push({ type: 'article', codeBexio: p.codeBexio, nom: `${p.name} 500 g`, quantite: q, prixUnitaire: prixPate, sousTotal: sub });
       }
@@ -1388,7 +1388,7 @@
       if (q > 0) {
         const sub = q * prixF1;
         total += sub; items += q;
-        const preoF1 = preorderIds.has(p.id) ? ' (pré-commande — livraison mi juin)' : '';
+        const preoF1 = preorderIds.has(p.id) ? ' (pré-commande - livraison mi juin)' : '';
         lines.push(`${p.name} 1 kg x${q} = ${sub.toFixed(2)} CHF${preoF1}`);
         lignesDetails.push({ type: 'article', codeBexio: p.codeBexio, nom: `${p.name} 1 kg`, quantite: q, prixUnitaire: prixF1, sousTotal: sub });
       }
@@ -1406,7 +1406,7 @@
       if (q > 0) {
         const sub = q * 35.00;
         total += sub; items += q;
-        const preoF5 = preorderIds.has(p.id) ? ' (pré-commande — livraison mi juin)' : '';
+        const preoF5 = preorderIds.has(p.id) ? ' (pré-commande - livraison mi juin)' : '';
         lines.push(`${p.name} 5 kg x${q} = ${sub.toFixed(2)} CHF${preoF5}`);
         lignesDetails.push({ type: 'article', codeBexio: p.codeBexio, nom: `${p.name} 5 kg`, quantite: q, prixUnitaire: 35.00, sousTotal: sub });
       }
@@ -1483,9 +1483,9 @@
   // ── Construire le corps du message ─────────────────────────────
   function buildMessage(lines, total, contact, sep = '\n') {
     const { prenom, nom, adresse, npa, ville, delivery, deliveryAutre, email, tel, motivations, dejaClient } = contact;
-    const deliveryLabel = delivery === 'livraison' ? 'Livraison — région NE/Bienne'
+    const deliveryLabel = delivery === 'livraison' ? 'Livraison - région NE/Bienne'
       : delivery === 'autre' ? `Autre : ${deliveryAutre || '(à préciser)'}`
-      : 'Retrait — La Neuveville, Montagu 24';
+      : 'Retrait - La Neuveville, Montagu 24';
     let msg = `Bonjour Giacomo,${sep}${sep}`;
     msg += `J'aimerais passer une commande de pâtes et farines de blé ancien de Sicile !${sep}${sep}`;
     msg += `Voici ma commande :${sep}${sep}`;
@@ -1529,8 +1529,8 @@
       livraison:      contact.delivery === 'autre'
                         ? `Autre : ${contact.deliveryAutre}`
                         : contact.delivery === 'livraison'
-                          ? 'Livraison — région NE/Bienne'
-                          : 'Retrait — La Neuveville',
+                          ? 'Livraison - région NE/Bienne'
+                          : 'Retrait - La Neuveville',
       motivations:    contact.motivations,
     };
     fetch(MAKE_WEBHOOK, {
@@ -1550,7 +1550,7 @@
     btnEmail.onclick = null;
     const sent = document.createElement('div');
     sent.style.cssText = 'text-align:center;font-family:sans-serif;font-size:13px;color:#888;margin-top:8px';
-    sent.textContent = '✓ Commande envoyée — merci !';
+    sent.textContent = '✓ Commande envoyée - merci !';
     document.querySelector('.sticky-footer-inner').appendChild(sent);
   }
 
@@ -1583,7 +1583,7 @@
   updateTotal();
   setClientType();
 
-  // ── Stock (Google Sheets — onglet "Stock") ─────────────────────
+  // ── Stock (Google Sheets - onglet "Stock") ─────────────────────
   const SHEET_ID = '1AQN1odaRphvTpkhLEuvFKa4P-mtPOTFrsFCtc_1f1QM';
 
   async function loadStock() {
