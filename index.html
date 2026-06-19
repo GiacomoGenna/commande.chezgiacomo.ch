@@ -598,6 +598,46 @@
       .reviews-grid { grid-template-columns: 1fr; }
     }
 
+    /* ── Toggle déjà client / nouveau client ── */
+    .client-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .client-toggle label {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 12px;
+      border: 1px solid #e0d4c8;
+      border-radius: 10px;
+      background: #fff;
+      font-family: sans-serif;
+      font-size: 14px;
+      color: #2c1a0e;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .client-toggle input { accent-color: #c2541a; }
+    .client-toggle label.active {
+      border-color: #c2541a;
+      background: #fff3ec;
+      font-weight: 600;
+    }
+    .client-hint {
+      font-family: sans-serif;
+      font-size: 13px;
+      color: #8b4513;
+      background: #fff3ec;
+      border: 1px solid #f0ddcd;
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
     /* ── Page footer ── */
     .page-footer {
       margin-top: 40px;
@@ -1035,7 +1075,21 @@
   <!-- FORMULAIRE CONTACT -->
   <div class="form-section-title">Tes coordonnées</div>
 
-  <div class="field-row">
+  <div class="client-toggle">
+    <label class="active">
+      <input type="radio" name="clienttype" value="nouveau" checked onchange="setClientType()" />
+      Nouveau client
+    </label>
+    <label>
+      <input type="radio" name="clienttype" value="existant" onchange="setClientType()" />
+      Déjà client
+    </label>
+  </div>
+  <div class="client-hint" id="client-existant-hint" style="display:none">
+    Déjà client ? Indique simplement ton email. On retrouve ta fiche (nom, adresse, téléphone) automatiquement.
+  </div>
+
+  <div class="field-row client-nouveau">
     <div class="field-group">
       <label>Prénom *</label>
       <input type="text" id="input-prenom" placeholder="Jaime" oninput="updateTotal()" autocomplete="given-name" />
@@ -1045,13 +1099,13 @@
       <input type="text" id="input-nom" placeholder="Lapasta" oninput="updateTotal()" autocomplete="family-name" />
     </div>
   </div>
-  <div class="field-full">
+  <div class="field-full client-nouveau">
     <div class="field-group">
       <label>Adresse *</label>
       <input type="text" id="input-adresse" placeholder="Rue de Lausanne 12" oninput="updateTotal()" autocomplete="street-address" />
     </div>
   </div>
-  <div class="field-row">
+  <div class="field-row client-nouveau">
     <div class="field-group">
       <label>NPA *</label>
       <input type="text" id="input-npa" placeholder="2520" oninput="updateTotal()" autocomplete="postal-code" />
@@ -1067,7 +1121,7 @@
       <input type="email" id="input-email" placeholder="giacomo@gmail.com" oninput="updateTotal()" autocomplete="email" />
     </div>
   </div>
-  <div class="field-full">
+  <div class="field-full client-nouveau">
     <div class="field-group">
       <label>Téléphone *</label>
       <input type="tel" id="input-tel" placeholder="+41 79 000 00 00" oninput="updateTotal()" autocomplete="tel" />
@@ -1366,18 +1420,36 @@
     const deliveryEl = document.querySelector('input[name="delivery"]:checked');
     const deliveryVal = deliveryEl ? deliveryEl.value : 'retrait';
     const motivationEls = document.querySelectorAll('input[name="motivation"]:checked');
+    const typeEl = document.querySelector('input[name="clienttype"]:checked');
+    const dejaClient = typeEl ? typeEl.value === 'existant' : false;
+    // Client déjà connu : on ne transmet que l'email (clé de rapprochement Bexio)
     return {
-      prenom:        document.getElementById('input-prenom').value.trim(),
-      nom:           document.getElementById('input-nom').value.trim(),
-      adresse:       document.getElementById('input-adresse').value.trim(),
-      npa:           document.getElementById('input-npa').value.trim(),
-      ville:         document.getElementById('input-ville').value.trim(),
+      dejaClient,
+      prenom:        dejaClient ? '' : document.getElementById('input-prenom').value.trim(),
+      nom:           dejaClient ? '' : document.getElementById('input-nom').value.trim(),
+      adresse:       dejaClient ? '' : document.getElementById('input-adresse').value.trim(),
+      npa:           dejaClient ? '' : document.getElementById('input-npa').value.trim(),
+      ville:         dejaClient ? '' : document.getElementById('input-ville').value.trim(),
       delivery:      deliveryVal,
       deliveryAutre: deliveryVal === 'autre' ? document.getElementById('delivery-autre-text').value.trim() : '',
       email:         document.getElementById('input-email').value.trim(),
-      tel:           document.getElementById('input-tel').value.trim(),
+      tel:           dejaClient ? '' : document.getElementById('input-tel').value.trim(),
       motivations:   Array.from(motivationEls).map(el => el.value),
     };
+  }
+
+  // ── Bascule nouveau / déjà client ──────────────────────────────
+  function setClientType() {
+    const typeEl = document.querySelector('input[name="clienttype"]:checked');
+    const existant = typeEl ? typeEl.value === 'existant' : false;
+    document.querySelectorAll('.client-nouveau').forEach(el => {
+      el.style.display = existant ? 'none' : '';
+    });
+    document.getElementById('client-existant-hint').style.display = existant ? '' : 'none';
+    document.querySelectorAll('.client-toggle label').forEach(l => {
+      l.classList.toggle('active', l.querySelector('input').checked);
+    });
+    updateTotal();
   }
 
   // ── Mise à jour UI ─────────────────────────────────────────────
@@ -1399,14 +1471,18 @@
     emailEl.style.borderColor = email && !emailOk ? '#e05555' : '';
     const rgpd       = document.getElementById('checkbox-newsletter').checked;
     const tel        = document.getElementById('input-tel').value.trim();
-    const base       = items > 0 && prenom && nom && adresse && npa && ville && rgpd && emailOk && tel;
+    const typeEl     = document.querySelector('input[name="clienttype"]:checked');
+    const dejaClient = typeEl ? typeEl.value === 'existant' : false;
+    const base       = dejaClient
+      ? items > 0 && emailOk && rgpd
+      : items > 0 && prenom && nom && adresse && npa && ville && rgpd && emailOk && tel;
     document.getElementById('btn-wa').classList.toggle('disabled', !base);
     document.getElementById('btn-email').classList.toggle('disabled', !base);
   }
 
   // ── Construire le corps du message ─────────────────────────────
   function buildMessage(lines, total, contact, sep = '\n') {
-    const { prenom, nom, adresse, npa, ville, delivery, deliveryAutre, email, tel, motivations } = contact;
+    const { prenom, nom, adresse, npa, ville, delivery, deliveryAutre, email, tel, motivations, dejaClient } = contact;
     const deliveryLabel = delivery === 'livraison' ? 'Livraison — région NE/Bienne'
       : delivery === 'autre' ? `Autre : ${deliveryAutre || '(à préciser)'}`
       : 'Retrait — La Neuveville, Montagu 24';
@@ -1437,6 +1513,7 @@
   function sendToMake(contact, lines, lignesDetails, total, canal) {
     const payload = {
       canal,
+      dejaClient: contact.dejaClient,
       total,
       lignes: lines,
       lignesDetails,
@@ -1504,6 +1581,7 @@
   }
 
   updateTotal();
+  setClientType();
 
   // ── Stock (Google Sheets — onglet "Stock") ─────────────────────
   const SHEET_ID = '1AQN1odaRphvTpkhLEuvFKa4P-mtPOTFrsFCtc_1f1QM';
