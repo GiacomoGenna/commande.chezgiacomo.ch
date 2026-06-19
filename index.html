@@ -650,10 +650,339 @@
     <strong>Comment ça marche ?</strong> Sélectionne tes produits et envoie ta commande en un clic — par <strong>WhatsApp</strong> ou par <strong>Email</strong>.
   </div>
 
-  <!-- AVIS CLIENTS (Trustindex — synchronisé avec Google) -->
+  <!-- AVIS CLIENTS (widget custom - avis Google) -->
   <div id="reviews-section">
     <div class="section-title">Ce qu'ils en disent</div>
-    <script defer async src='https://cdn.trustindex.io/loader.js?9e1f49d72f4a773f0c3605512e1'></script>
+  <div id="avis-google-giacomo"></div>
+
+  <style>
+    #avis-google-giacomo {
+      --terracotta: #c2541a;
+      --creme: #fff3ec;
+      --brun: #2c1a0e;
+      --gris: #6b5544;
+      --etoile: #e8a020;
+      --bordure: #ece1d6;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      max-width: 1080px;
+      margin: 40px auto;
+      padding: 0 16px;
+      color: var(--brun);
+      box-sizing: border-box;
+    }
+    #avis-google-giacomo *, #avis-google-giacomo *::before, #avis-google-giacomo *::after { box-sizing: border-box; }
+
+    /* En-tete : note globale (compact, sur une ligne) */
+    .agg-entete {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 8px 16px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .agg-logo-google { display: flex; align-items: center; gap: 8px; }
+    .agg-logo-google svg { width: 22px; height: 22px; flex-shrink: 0; }
+    .agg-logo-google span { font-size: 15px; font-weight: 600; color: var(--brun); }
+    .agg-note-bloc { display: flex; align-items: center; gap: 8px; }
+    .agg-note-chiffre { font-size: 22px; font-weight: 700; line-height: 1; }
+    .agg-etoiles { display: flex; gap: 2px; }
+    .agg-etoiles svg { width: 16px; height: 16px; }
+    .agg-nb { font-size: 13px; color: var(--gris); }
+
+    /* Carrousel : une rangee qui defile */
+    .agg-carrousel { position: relative; }
+    .agg-piste-zone { overflow: hidden; }
+    .agg-piste {
+      display: flex;
+      gap: 16px;
+      transition: transform .45s cubic-bezier(.4,.0,.2,1);
+      will-change: transform;
+    }
+    .agg-carte {
+      background: #fff;
+      border: 1px solid var(--bordure);
+      border-radius: 14px;
+      padding: 18px 18px 16px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 10px rgba(44, 26, 14, 0.04);
+      flex: 0 0 calc((100% - 32px) / 3);   /* 3 cartes visibles */
+      min-width: 0;
+    }
+    @media (max-width: 860px) { .agg-carte { flex-basis: calc((100% - 16px) / 2); } } /* 2 visibles */
+    @media (max-width: 560px) { .agg-carte { flex-basis: 100%; } }                     /* 1 visible */
+
+    /* Fleches */
+    .agg-fleche {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--bordure);
+      background: #fff;
+      color: var(--terracotta);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 3px 12px rgba(44, 26, 14, 0.12);
+      z-index: 2;
+      transition: background .15s ease, opacity .15s ease;
+    }
+    .agg-fleche:hover { background: var(--creme); }
+    .agg-fleche svg { width: 18px; height: 18px; }
+    .agg-prec { left: -8px; }
+    .agg-suiv { right: -8px; }
+    @media (max-width: 560px) { .agg-prec { left: 2px; } .agg-suiv { right: 2px; } }
+
+    /* Points */
+    .agg-points { display: flex; justify-content: center; gap: 7px; margin-top: 16px; }
+    .agg-point {
+      width: 8px; height: 8px; border-radius: 50%;
+      border: none; padding: 0; cursor: pointer;
+      background: #d8cabb; transition: all .2s ease;
+    }
+    .agg-point.actif { background: var(--terracotta); width: 22px; border-radius: 5px; }
+
+    .agg-carte-tete { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .agg-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 18px; flex-shrink: 0;
+    }
+    .agg-ident { min-width: 0; }
+    .agg-nom { font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 6px; }
+    .agg-badge {
+      font-size: 10px; font-weight: 600; color: var(--terracotta);
+      background: var(--creme); border-radius: 20px; padding: 2px 7px; white-space: nowrap;
+    }
+    .agg-sous { font-size: 12px; color: var(--gris); margin-top: 2px; }
+    .agg-carte-etoiles { display: flex; gap: 1px; margin-bottom: 10px; }
+    .agg-carte-etoiles svg { width: 16px; height: 16px; }
+    .agg-texte { font-size: 14px; line-height: 1.6; color: #3d2a1a; margin: 0; }
+    .agg-gicone { margin-top: 14px; }
+    .agg-gicone svg { width: 17px; height: 17px; opacity: .9; }
+
+    /* CTA */
+    .agg-cta { text-align: center; margin-top: 20px; }
+    .agg-cta a {
+      display: inline-block;
+      background: var(--terracotta);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 13px 26px;
+      border-radius: 30px;
+      transition: background .18s ease;
+    }
+    .agg-cta a:hover { background: #a8460f; }
+    .agg-cta-sous { font-size: 13px; color: var(--gris); margin-top: 10px; }
+  </style>
+
+  <script>
+  (function () {
+    // ====================================================================
+    // TES AVIS - pour en ajouter un, copie un bloc { ... } et remplis-le.
+    //   note : 1 a 5    |    guide : true affiche le badge "Local Guide"
+    // ====================================================================
+    var AVIS = [
+      {
+        nom: "Lina Raf", initiale: "L", couleur: "#c2541a", guide: true,
+        meta: "Local Guide · 18 avis", note: 5,
+        texte: "Des pâtes absolument délicieuses, la sauce s'accroche tel un koala à sa branche. J'ai pris le Pack Découverte pour goûter. Merci Giacomo."
+      },
+      {
+        nom: "Nadia", initiale: "N", couleur: "#8b4513", guide: true,
+        meta: "Local Guide · 9 avis", note: 5,
+        texte: "Tellement goûtu et délicieux ! De plus facile à digérer, et nourrissant pour le corps. On ne s'en passe plus !"
+      },
+      {
+        nom: "Claudia Policastro", initiale: "C", couleur: "#7a8b3a", guide: false,
+        meta: "4 avis", note: 5,
+        texte: "J'ai testé la farine avec mon levain, le pain est hyper bon et la pâte se travaille vraiment bien. J'ai aussi fait de la pizza : la tenue est top, le rond reste bien formé."
+      },
+      {
+        nom: "Nicolò Robuschi", initiale: "N", couleur: "#3a6b8b", guide: false,
+        meta: "Avec photo", note: 5,
+        texte: "Les pâtes et les farines sont de très haute qualité et très digestibles."
+      },
+      {
+        nom: "Daniel Loosli", initiale: "D", couleur: "#9b5a2a", guide: false,
+        meta: "", note: 5,
+        texte: "Les pâtes restent bien al dente, même s'il faut réchauffer un reste. Leur odeur est également très agréable."
+      },
+      {
+        nom: "Stefania Vacirca", initiale: "S", couleur: "#a8460f", guide: false,
+        meta: "2 avis", note: 5,
+        texte: "Les pâtes ont fait l'unanimité dans la famille, même chez les petits !"
+      },
+      {
+        nom: "N. M.", initiale: "N", couleur: "#5a7d6b", guide: false,
+        meta: "5 avis", note: 5,
+        texte: "Super bonnes pâtes, de grande qualité et facile à digérer. Commande facile et livraison sans soucis. Je recommande."
+      }
+    ];
+
+    // Note globale affichee (tes vrais chiffres Google)
+    var NOTE_GLOBALE = "5,0";
+    var NB_AVIS = 11;
+    var LIEN_GOOGLE = "https://g.page/r/Cd0BoDoCMR7rEBM/review";
+
+    // --------------------------------------------------------------------
+    function etoile(pleine) {
+      var c = pleine ? "#e8a020" : "#dcd2c6";
+      return '<svg viewBox="0 0 24 24" fill="' + c + '"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17.3 5.8 20.6l1.6-6.7L2.2 8.9l6.9-.6z"/></svg>';
+    }
+    function rangEtoiles(note) {
+      var s = "";
+      for (var i = 1; i <= 5; i++) { s += etoile(i <= note); }
+      return s;
+    }
+    function logoGoogleG() {
+      return '<svg viewBox="0 0 48 48"><path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h11.8c-.5 2.7-2 5-4.4 6.6v5.5h7.1c4.2-3.8 6.6-9.5 6.6-16.1z"/><path fill="#34A853" d="M24 46c5.9 0 10.9-2 14.5-5.4l-7.1-5.5c-2 1.3-4.5 2.1-7.4 2.1-5.7 0-10.5-3.8-12.2-9H4.5v5.7C8.1 41.1 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.8 28.2c-.4-1.3-.7-2.7-.7-4.2s.3-2.9.7-4.2v-5.7H4.5C3 17.1 2.1 20.4 2.1 24s.9 6.9 2.4 9.9l7.3-5.7z"/><path fill="#EA4335" d="M24 10.8c3.2 0 6.1 1.1 8.4 3.3l6.3-6.3C34.9 4.1 29.9 2 24 2 15.4 2 8.1 6.9 4.5 14.1l7.3 5.7c1.7-5.2 6.5-9 12.2-9z"/></svg>';
+    }
+
+    function fleche(dir) {
+      var d = dir === "prec"
+        ? "M15 18l-6-6 6-6"   // chevron gauche
+        : "M9 6l6 6-6 6";     // chevron droit
+      return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="' + d + '"/></svg>';
+    }
+
+    function rendre() {
+      var cartes = AVIS.map(function (a) {
+        var badge = a.guide ? '<span class="agg-badge">Local Guide</span>' : '';
+        var sous = a.meta ? '<div class="agg-sous">' + a.meta + '</div>' : '';
+        return '' +
+          '<div class="agg-carte">' +
+            '<div class="agg-carte-tete">' +
+              '<div class="agg-avatar" style="background:' + a.couleur + '">' + a.initiale + '</div>' +
+              '<div class="agg-ident">' +
+                '<div class="agg-nom">' + a.nom + badge + '</div>' + sous +
+              '</div>' +
+            '</div>' +
+            '<div class="agg-carte-etoiles">' + rangEtoiles(a.note) + '</div>' +
+            '<p class="agg-texte">' + a.texte + '</p>' +
+            '<div class="agg-gicone">' + logoGoogleG() + '</div>' +
+          '</div>';
+      }).join("");
+
+      var html = '' +
+        '<div class="agg-entete">' +
+          '<div class="agg-logo-google">' + logoGoogleG() + '<span>Avis Google</span></div>' +
+          '<div class="agg-note-bloc">' +
+            '<span class="agg-note-chiffre">' + NOTE_GLOBALE + '</span>' +
+            '<div class="agg-etoiles">' + rangEtoiles(5) + '</div>' +
+            '<span class="agg-nb">' + NB_AVIS + ' avis vérifiés</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="agg-carrousel">' +
+          '<button class="agg-fleche agg-prec" aria-label="Avis précédents">' + fleche("prec") + '</button>' +
+          '<div class="agg-piste-zone"><div class="agg-piste">' + cartes + '</div></div>' +
+          '<button class="agg-fleche agg-suiv" aria-label="Avis suivants">' + fleche("suiv") + '</button>' +
+        '</div>' +
+        '<div class="agg-points"></div>' +
+        '<div class="agg-cta">' +
+          '<a href="' + LIEN_GOOGLE + '" target="_blank" rel="noopener">Lire tous les avis sur Google</a>' +
+          '<div class="agg-cta-sous">Tu as commandé ? Laisse ton avis, ça aide les prochains gourmands.</div>' +
+        '</div>';
+
+      var racine = document.getElementById("avis-google-giacomo");
+      racine.innerHTML = html;
+      activerCarrousel(racine);
+    }
+
+    function activerCarrousel(racine) {
+      var piste = racine.querySelector(".agg-piste");
+      var zone = racine.querySelector(".agg-piste-zone");
+      var cartes = racine.querySelectorAll(".agg-carte");
+      var zonePoints = racine.querySelector(".agg-points");
+      var index = 0, timer = null;
+
+      function parVue() {
+        // base sur la largeur du conteneur, pas de la fenetre (robuste en embarque)
+        var w = zone.clientWidth;
+        if (w < 480) return 1;
+        if (w < 760) return 2;
+        return 3;
+      }
+      function maxIndex() { return Math.max(0, cartes.length - parVue()); }
+
+      function gap() { return parseFloat(getComputedStyle(piste).gap) || 16; }
+
+      function dimensionner() {
+        var n = parVue();
+        var largeur = (zone.clientWidth - gap() * (n - 1)) / n;
+        cartes.forEach(function (c) {
+          c.style.flex = "0 0 " + largeur + "px";
+          c.style.maxWidth = largeur + "px";
+        });
+      }
+
+      function pas() {
+        return cartes[0].getBoundingClientRect().width + gap();
+      }
+
+      function aller(i) {
+        index = Math.max(0, Math.min(i, maxIndex()));
+        piste.style.transform = "translateX(" + (-index * pas()) + "px)";
+        majPoints();
+      }
+
+      function majPoints() {
+        var n = maxIndex() + 1;
+        var pts = "";
+        for (var i = 0; i < n; i++) {
+          pts += '<button class="agg-point' + (i === index ? ' actif' : '') + '" aria-label="Aller au groupe ' + (i + 1) + '"></button>';
+        }
+        zonePoints.innerHTML = pts;
+        zonePoints.querySelectorAll(".agg-point").forEach(function (b, i) {
+          b.addEventListener("click", function () { aller(i); relancer(); });
+        });
+      }
+
+      function suivant() { aller(index >= maxIndex() ? 0 : index + 1); }
+      function precedent() { aller(index <= 0 ? maxIndex() : index - 1); }
+
+      function relancer() {
+        if (timer) clearInterval(timer);
+        timer = setInterval(suivant, 5000);
+      }
+
+      racine.querySelector(".agg-suiv").addEventListener("click", function () { suivant(); relancer(); });
+      racine.querySelector(".agg-prec").addEventListener("click", function () { precedent(); relancer(); });
+
+      // pause au survol
+      var carrousel = racine.querySelector(".agg-carrousel");
+      carrousel.addEventListener("mouseenter", function () { if (timer) clearInterval(timer); });
+      carrousel.addEventListener("mouseleave", relancer);
+
+      // glissement tactile (mobile)
+      var x0 = null;
+      zone.addEventListener("touchstart", function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+      zone.addEventListener("touchend", function (e) {
+        if (x0 === null) return;
+        var dx = e.changedTouches[0].clientX - x0;
+        if (Math.abs(dx) > 40) { dx < 0 ? suivant() : precedent(); relancer(); }
+        x0 = null;
+      }, { passive: true });
+
+      window.addEventListener("resize", function () { dimensionner(); aller(index); });
+
+      dimensionner();
+      aller(0);
+      relancer();
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", rendre);
+    } else {
+      rendre();
+    }
+  })();
+  </script>
   </div>
 
   <!-- PACK DÉCOUVERTE -->
