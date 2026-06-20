@@ -778,7 +778,7 @@
   /* Hero */
   header {
     position: relative; text-align: center; padding: 84px 20px 66px; border-bottom: none;
-    background: linear-gradient(rgba(34,18,8,.50), rgba(34,18,8,.66)), url('pasta artigianale Mulino Angelica.jpg') center/cover no-repeat;
+    background: linear-gradient(rgba(34,18,8,.50), rgba(34,18,8,.66)), url('hero.jpg') center/cover no-repeat;
     color: #fdf8f3;
   }
   header .back-btn { color: #f3e6d6; opacity: .92; }
@@ -815,7 +815,12 @@
   @media(max-width:560px){ #pates-list, #farines-1kg-list, #farines-5kg-list { grid-template-columns:1fr; } }
 
   /* Pack */
-  .pack-card { background:#fff; border:1.5px solid #2c1a0e; border-radius:14px; box-shadow:0 8px 26px rgba(44,26,14,.09); align-items:flex-start; }
+  .pack-card { background:#fff; border:1.5px solid #2c1a0e; border-radius:14px; box-shadow:0 8px 26px rgba(44,26,14,.09); display:block; padding:24px; }
+  .pack-top { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:2px; }
+  .pack-head { min-width:0; }
+  .price-col { display:flex; flex-direction:column; align-items:flex-end; gap:8px; flex-shrink:0; }
+  .price-col .product-price { font-family:'Fraunces',serif; font-weight:600; font-size:24px; color:#a8460f; }
+  .was { font-size:12px; color:#877a68; text-decoration:line-through; }
   .pack-badge { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:#fff; background:#a8460f; border-radius:100px; padding:3px 11px; margin-bottom:9px; }
   .pack-card .product-name { font-family:'Fraunces',serif; font-weight:600; font-size:22px; }
   .pack-pates { grid-template-columns:repeat(3,1fr) !important; }
@@ -834,6 +839,9 @@
   .btn-email { background:#2c1a0e; }
   .co-hint { display:none; text-align:center; font-size:12px; font-weight:600; color:#a8460f; background:#fff3ec; padding:6px 16px; border-bottom:1px solid #e8ddd4; }
   .co-hint.show { display:block; }
+  .foot-quote { font-family:'Fraunces',serif; font-style:italic; font-size:18px; color:#8b4513; margin-bottom:14px; }
+  .foot-stamp { margin-bottom:18px; }
+  .page-footer .stamp { color:#8b4513; border-color:#8b4513; }
   </style>
 </head>
 <body>
@@ -847,9 +855,159 @@
 
 <main>
 
-  <!-- INTRO -->
-  <div class="intro-box">
-    <strong>Comment ça marche ?</strong> Sélectionne tes produits et envoie ta commande en un clic - par <strong>WhatsApp</strong> ou par <strong>Email</strong>.
+  <!-- PACK DÉCOUVERTE -->
+  <div class="section-title xl">Compose ton Pack Découverte</div>
+
+  <div class="pack-card" id="card-pack">
+    <div class="pack-top">
+      <div class="pack-head">
+        <div class="pack-badge">Idéal pour goûter</div>
+        <div class="product-name">Pack Découverte - 4 kg</div>
+        <div class="pack-desc">Choisis jusqu'à 4 types de pâtes et 2 types de farine.</div>
+      </div>
+      <div class="price-col">
+        <div class="product-price">37.00 CHF</div>
+        <div class="was">48.00 CHF</div>
+        <div class="qty-stepper">
+          <button onclick="changeQty('pack', -1)">−</button>
+          <div class="qty-val" id="qty-pack">0</div>
+          <button id="pack-plus-btn" onclick="changeQty('pack', +1)" disabled style="opacity:0.35;cursor:default">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pack-sub-label">Tes pâtes <span class="pack-pates-count" id="pack-pates-count">0 / 4</span></div>
+    <div class="pack-progress"><div class="pack-progress-fill" id="pack-progress-fill"></div></div>
+    <div class="pack-pates" id="pack-pates"></div>
+    <div class="pack-pates-hint" id="pack-pates-hint"></div>
+
+    <div class="pack-sub-label">Tes farines</div>
+    <div class="pack-mix">
+      <label><input type="checkbox" id="pack-mix-pizza" onchange="limitPackMix()"> Mix Pizza<span id="pack-mix-pizza-stock"></span></label>
+      <label><input type="checkbox" id="pack-mix-pain" onchange="limitPackMix()"> Mix Pain<span id="pack-mix-pain-stock"></span></label>
+      <label><input type="checkbox" id="pack-mix-pasta" onchange="limitPackMix()"> Mix Pasta<span id="pack-mix-pasta-stock"></span></label>
+    </div>
+    <div class="pack-mix-hint" id="pack-mix-hint">Choisis 1 mix (×2) ou 2 mix différents</div>
+  </div>
+
+  <!-- A LA CARTE -->
+  <div class="section-title xl">Ou à la carte</div>
+
+  <!-- PÂTES -->
+  <div class="section-title">
+    Pâtes artisanales - 500 g
+    <span class="discount-badge">6.00 CHF dès 3 paquets</span>
+  </div>
+
+  <div id="pates-list"></div>
+
+  <!-- FARINES 1KG -->
+  <div class="section-title">
+    Farines - 1 kg
+    <span class="discount-badge">7.50 CHF dès 3 paquets</span>
+  </div>
+
+  <div id="farines-1kg-list"></div>
+
+  <!-- FARINES 5KG -->
+  <div class="section-title">Farines - 5 kg</div>
+
+  <div id="farines-5kg-list"></div>
+
+  <!-- FORMULAIRE CONTACT -->
+  <div class="form-section-title">Tes coordonnées</div>
+
+  <div class="client-toggle">
+    <label class="active">
+      <input type="radio" name="clienttype" value="nouveau" checked onchange="setClientType()" />
+      Nouveau client
+    </label>
+    <label>
+      <input type="radio" name="clienttype" value="existant" onchange="setClientType()" />
+      Déjà client
+    </label>
+  </div>
+  <div class="client-hint" id="client-existant-hint" style="display:none">
+    Déjà client ? Indique simplement ton email. On retrouve ta fiche (nom, adresse, téléphone) automatiquement.
+  </div>
+
+  <div class="field-row client-nouveau">
+    <div class="field-group">
+      <label>Prénom *</label>
+      <input type="text" id="input-prenom" placeholder="Jaime" oninput="updateTotal()" autocomplete="given-name" />
+    </div>
+    <div class="field-group">
+      <label>Nom *</label>
+      <input type="text" id="input-nom" placeholder="Lapasta" oninput="updateTotal()" autocomplete="family-name" />
+    </div>
+  </div>
+  <div class="field-full client-nouveau">
+    <div class="field-group">
+      <label>Adresse *</label>
+      <input type="text" id="input-adresse" placeholder="Rue de Lausanne 12" oninput="updateTotal()" autocomplete="street-address" />
+    </div>
+  </div>
+  <div class="field-row client-nouveau">
+    <div class="field-group">
+      <label>NPA *</label>
+      <input type="text" id="input-npa" placeholder="2520" oninput="updateTotal()" autocomplete="postal-code" />
+    </div>
+    <div class="field-group">
+      <label>Ville *</label>
+      <input type="text" id="input-ville" placeholder="La Neuveville" oninput="updateTotal()" autocomplete="address-level2" />
+    </div>
+  </div>
+  <div class="field-full">
+    <div class="field-group">
+      <label>Email *</label>
+      <input type="email" id="input-email" placeholder="giacomo@gmail.com" oninput="updateTotal()" autocomplete="email" />
+    </div>
+  </div>
+  <div class="field-full client-nouveau">
+    <div class="field-group">
+      <label>Téléphone *</label>
+      <input type="tel" id="input-tel" placeholder="+41 79 000 00 00" oninput="updateTotal()" autocomplete="tel" />
+    </div>
+  </div>
+
+  <div class="form-section-title" style="margin-top:40px">Mode de réception</div>
+  <div class="field-full">
+    <div class="field-group">
+      <div class="delivery-choice">
+        <label>
+          <input type="radio" name="delivery" id="delivery-retrait" value="retrait" checked onchange="updateTotal()" />
+          Retrait - La Neuveville (gratuit)
+        </label>
+        <label>
+          <input type="radio" name="delivery" id="delivery-livraison" value="livraison" onchange="updateTotal()" />
+          Livraison - région NE/Bienne (dès 70 CHF)
+        </label>
+        <label class="delivery-autre">
+          <input type="radio" name="delivery" id="delivery-autre" value="autre" onchange="updateTotal()" />
+          Autre :&nbsp;<input type="text" id="delivery-autre-text" class="delivery-inline-text" placeholder="préciser…" oninput="updateTotal()" onclick="event.stopPropagation()" />
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section-title" style="margin-top:40px">Pourquoi achètes-tu des pâtes et farines de blé ancien bio ? <span style="font-size:10px;color:#aaa;font-weight:400;letter-spacing:0;text-transform:none">(optionnel)</span></div>
+  <div class="field-full">
+    <div class="field-group">
+      <div class="motivation-list">
+        <label><input type="checkbox" name="motivation" value="La qualité et le goût des produits artisanaux" /> La qualité et le goût des produits artisanaux</label>
+        <label><input type="checkbox" name="motivation" value="Une meilleure digestion / confort digestif" /> Une meilleure digestion / confort digestif</label>
+        <label><input type="checkbox" name="motivation" value="Je privilégie les produits bio dans mon alimentation" /> Je privilégie les produits bio dans mon alimentation</label>
+        <label><input type="checkbox" name="motivation" value="Sur recommandation d'un proche" /> Sur recommandation d'un proche</label>
+        <label><input type="checkbox" name="motivation" value="Juste pour tester" /> Juste pour tester</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="checkbox-block" style="background:#f5f0eb;border-color:#e0d4c8">
+    <label>
+      <input type="checkbox" id="checkbox-newsletter" onchange="updateTotal()" />
+      J'accepte de recevoir des communications par WhatsApp ou email sur les nouveautés de chezgiacomo.ch.
+    </label>
   </div>
 
   <!-- AVIS CLIENTS (widget custom - avis Google) -->
@@ -1187,160 +1345,10 @@
   </script>
   </div>
 
-  <!-- PACK DÉCOUVERTE -->
-  <div class="section-title xl">Compose ton Pack Découverte</div>
-
-  <div class="pack-card" id="card-pack">
-    <div class="product-info">
-      <div class="pack-badge">Idéal pour goûter</div>
-      <div class="product-name">Pack Découverte - 4 kg</div>
-      <div class="pack-desc">Choisis tes 4 pâtes et tes 2 farines, comme tu les aimes.</div>
-
-      <div class="pack-sub-label">Tes pâtes <span class="pack-pates-count" id="pack-pates-count">0 / 4</span></div>
-      <div class="pack-progress"><div class="pack-progress-fill" id="pack-progress-fill"></div></div>
-      <div class="pack-pates" id="pack-pates"></div>
-      <div class="pack-pates-hint" id="pack-pates-hint"></div>
-
-      <div class="pack-sub-label">Tes farines</div>
-      <div class="pack-mix">
-        <label><input type="checkbox" id="pack-mix-pizza" onchange="limitPackMix()"> Mix Pizza<span id="pack-mix-pizza-stock"></span></label>
-        <label><input type="checkbox" id="pack-mix-pain" onchange="limitPackMix()"> Mix Pain<span id="pack-mix-pain-stock"></span></label>
-        <label><input type="checkbox" id="pack-mix-pasta" onchange="limitPackMix()"> Mix Pasta<span id="pack-mix-pasta-stock"></span></label>
-      </div>
-      <div class="pack-mix-hint" id="pack-mix-hint">Choisis 1 mix (×2) ou 2 mix différents</div>
-    </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0">
-      <div class="product-price">37.00 CHF</div>
-      <div class="qty-stepper">
-        <button onclick="changeQty('pack', -1)">−</button>
-        <div class="qty-val" id="qty-pack">0</div>
-        <button id="pack-plus-btn" onclick="changeQty('pack', +1)" disabled style="opacity:0.35;cursor:default">+</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- A LA CARTE -->
-  <div class="section-title xl">Ou à la carte</div>
-
-  <!-- PÂTES -->
-  <div class="section-title">
-    Pâtes artisanales - 500 g
-    <span class="discount-badge">6.00 CHF dès 3 paquets</span>
-  </div>
-
-  <div id="pates-list"></div>
-
-  <!-- FARINES 1KG -->
-  <div class="section-title">
-    Farines - 1 kg
-    <span class="discount-badge">7.50 CHF dès 3 paquets</span>
-  </div>
-
-  <div id="farines-1kg-list"></div>
-
-  <!-- FARINES 5KG -->
-  <div class="section-title">Farines - 5 kg</div>
-
-  <div id="farines-5kg-list"></div>
-
-  <!-- FORMULAIRE CONTACT -->
-  <div class="form-section-title">Tes coordonnées</div>
-
-  <div class="client-toggle">
-    <label class="active">
-      <input type="radio" name="clienttype" value="nouveau" checked onchange="setClientType()" />
-      Nouveau client
-    </label>
-    <label>
-      <input type="radio" name="clienttype" value="existant" onchange="setClientType()" />
-      Déjà client
-    </label>
-  </div>
-  <div class="client-hint" id="client-existant-hint" style="display:none">
-    Déjà client ? Indique simplement ton email. On retrouve ta fiche (nom, adresse, téléphone) automatiquement.
-  </div>
-
-  <div class="field-row client-nouveau">
-    <div class="field-group">
-      <label>Prénom *</label>
-      <input type="text" id="input-prenom" placeholder="Jaime" oninput="updateTotal()" autocomplete="given-name" />
-    </div>
-    <div class="field-group">
-      <label>Nom *</label>
-      <input type="text" id="input-nom" placeholder="Lapasta" oninput="updateTotal()" autocomplete="family-name" />
-    </div>
-  </div>
-  <div class="field-full client-nouveau">
-    <div class="field-group">
-      <label>Adresse *</label>
-      <input type="text" id="input-adresse" placeholder="Rue de Lausanne 12" oninput="updateTotal()" autocomplete="street-address" />
-    </div>
-  </div>
-  <div class="field-row client-nouveau">
-    <div class="field-group">
-      <label>NPA *</label>
-      <input type="text" id="input-npa" placeholder="2520" oninput="updateTotal()" autocomplete="postal-code" />
-    </div>
-    <div class="field-group">
-      <label>Ville *</label>
-      <input type="text" id="input-ville" placeholder="La Neuveville" oninput="updateTotal()" autocomplete="address-level2" />
-    </div>
-  </div>
-  <div class="field-full">
-    <div class="field-group">
-      <label>Email *</label>
-      <input type="email" id="input-email" placeholder="giacomo@gmail.com" oninput="updateTotal()" autocomplete="email" />
-    </div>
-  </div>
-  <div class="field-full client-nouveau">
-    <div class="field-group">
-      <label>Téléphone *</label>
-      <input type="tel" id="input-tel" placeholder="+41 79 000 00 00" oninput="updateTotal()" autocomplete="tel" />
-    </div>
-  </div>
-
-  <div class="form-section-title" style="margin-top:40px">Mode de réception</div>
-  <div class="field-full">
-    <div class="field-group">
-      <div class="delivery-choice">
-        <label>
-          <input type="radio" name="delivery" id="delivery-retrait" value="retrait" checked onchange="updateTotal()" />
-          Retrait - La Neuveville (gratuit)
-        </label>
-        <label>
-          <input type="radio" name="delivery" id="delivery-livraison" value="livraison" onchange="updateTotal()" />
-          Livraison - région NE/Bienne (dès 70 CHF)
-        </label>
-        <label class="delivery-autre">
-          <input type="radio" name="delivery" id="delivery-autre" value="autre" onchange="updateTotal()" />
-          Autre :&nbsp;<input type="text" id="delivery-autre-text" class="delivery-inline-text" placeholder="préciser…" oninput="updateTotal()" onclick="event.stopPropagation()" />
-        </label>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-section-title" style="margin-top:40px">Pourquoi achètes-tu des pâtes et farines de blé ancien bio ? <span style="font-size:10px;color:#aaa;font-weight:400;letter-spacing:0;text-transform:none">(optionnel)</span></div>
-  <div class="field-full">
-    <div class="field-group">
-      <div class="motivation-list">
-        <label><input type="checkbox" name="motivation" value="La qualité et le goût des produits artisanaux" /> La qualité et le goût des produits artisanaux</label>
-        <label><input type="checkbox" name="motivation" value="Une meilleure digestion / confort digestif" /> Une meilleure digestion / confort digestif</label>
-        <label><input type="checkbox" name="motivation" value="Je privilégie les produits bio dans mon alimentation" /> Je privilégie les produits bio dans mon alimentation</label>
-        <label><input type="checkbox" name="motivation" value="Sur recommandation d'un proche" /> Sur recommandation d'un proche</label>
-        <label><input type="checkbox" name="motivation" value="Juste pour tester" /> Juste pour tester</label>
-      </div>
-    </div>
-  </div>
-
-  <div class="checkbox-block" style="background:#f5f0eb;border-color:#e0d4c8">
-    <label>
-      <input type="checkbox" id="checkbox-newsletter" onchange="updateTotal()" />
-      J'accepte de recevoir des communications par WhatsApp ou email sur les nouveautés de chezgiacomo.ch.
-    </label>
-  </div>
-
   <!-- FOOTER PAGE -->
   <footer class="page-footer">
+    <div class="foot-quote">"Je ne vends que ce que je mange moi-même à la maison."</div>
+    <div class="foot-stamp"><span class="stamp">Chez Giacomo · La Neuveville</span></div>
     <a href="https://chezgiacomo.ch/mentions-legales">Mentions légales</a>
     <span class="page-footer-sep">·</span>
     <a href="https://chezgiacomo.ch/confidentialite">Politique de confidentialité</a>
